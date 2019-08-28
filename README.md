@@ -2,31 +2,39 @@
 
 ## Online audio distribution platform and music sharing website
 
-Requirements:
-* python 3.7.4
-* pipenv 2018.11.26
 
-Install pipenv package:
-```bash
-    pip3 install pipenv==2018.11.26
-```
+Installation Docker and its dependencies:
+1) [Install Docker][1]
+2) [Install Docker Compose][2]
 
-Installation dependencies:
-```bash
+Build container:
+1) Enter project folder.
+    ```bash
     cd vibrer
-    # (you should get to the same level with Pipfile)
+    # (you should get to the same level with Dockerfile)
+    ```
+2) Build container.
+    ```
+    sudo docker-compose build
+    ```
+3) Run container.
+    ```
+    sudo docker-compose run --service-ports web
+    ```
+
+Note:<br>
+To update pip dependencies, run Django model migrations and start server execute following:
 ```
+sudo docker-compose -f docker-compose.yaml -f docker-compose.setup.yaml up
+```
+To show running containers run following:
 ```bash
-    pipenv --python 3.7.4
-    pipenv install --dev
+sudo docker ps
+```
+To stop concrete container run following:
+```bash
+sudo docker stop <container_name>
 ```
 
-Activate pipenv:
-```bash
-    pipenv shell
-```
-
-Deactivate pipenv:
-```bash
-    exit
-```
+[1]: https://docs.docker.com/install/linux/docker-ce/ubuntu/
+[2]: https://docs.docker.com/compose/install/
