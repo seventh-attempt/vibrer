@@ -14,26 +14,33 @@ Build container:
     # (you should get to the same level with Dockerfile)
     ```
 2) Build container.
-    ```
-    sudo docker-compose build
+    ```bash
+    docker-compose build
     ```
 3) Run container.
+    ```bash
+    docker-compose up
     ```
-    sudo docker-compose run --service-ports web
+    ```bash
+    docker-compose start
     ```
 
 Note:<br>
 To update pip dependencies, run Django model migrations and start server execute following:
+```bash
+docker-compose -f docker-compose.yaml -f docker-compose.setup.yaml up
 ```
-sudo docker-compose -f docker-compose.yaml -f docker-compose.setup.yaml up
+To make migrations and apply them run following:
+```bash
+docker-compose -f docker-compose.yaml -f docker-compose.mkmigrations.yaml up
 ```
 To show running containers run following:
 ```bash
-sudo docker ps
+docker[-compose] ps
 ```
-To stop concrete container run following:
+To stop running containers run following:
 ```bash
-sudo docker stop <container_name>
+docker-compose stop
 ```
 
 [1]: https://docs.docker.com/install/linux/docker-ce/ubuntu/
