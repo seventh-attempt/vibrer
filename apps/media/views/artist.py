@@ -4,7 +4,7 @@ from apps.media.models.artist import Artist
 from django_filters.rest_framework import DjangoFilterBackend
 
 
-class ArtistListView(viewsets.ModelViewSet):
+class ArtistListView(viewsets.ReadOnlyModelViewSet):
     serializer_class = ArtistDetailSerializer
     queryset = Artist.objects.all()
     filter_backends = [DjangoFilterBackend]

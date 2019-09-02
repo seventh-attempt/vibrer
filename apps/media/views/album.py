@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 
 
-class AlbumListView(viewsets.ModelViewSet):
+class AlbumListView(viewsets.ReadOnlyModelViewSet):
     serializer_class = AlbumSerializer
     queryset = Album.objects.all()
     filter_backends = [DjangoFilterBackend, OrderingFilter]

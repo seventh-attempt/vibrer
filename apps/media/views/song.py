@@ -4,7 +4,7 @@ from apps.media.models.song import Song
 from apps.media.serializers.song import SongDetailSerializer
 
 
-class SongListView(viewsets.ModelViewSet):
+class SongListView(viewsets.ReadOnlyModelViewSet):
     serializer_class = SongDetailSerializer
     queryset = Song.objects.all()
     filter_backends = [DjangoFilterBackend]
