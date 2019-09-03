@@ -20,4 +20,7 @@ class Genre(Model):
         (RdB, 'R & B'),
         (JAZZ, 'Jazz'),
     )
-    name = CharField(choices=GENRES)
+    name = CharField(choices=GENRES, max_length=20, unique=True)
+
+    def __str__(self):
+        return self.name
