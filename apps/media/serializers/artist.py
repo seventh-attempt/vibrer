@@ -6,3 +6,9 @@ class ArtistDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artist
         fields = '__all__'
+
+
+class ArtistForAlbumSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Artist
+        fields = ('stage_name', 'photo',)
