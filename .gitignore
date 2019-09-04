@@ -126,3 +126,6 @@ dmypy.json
 
 # Pycharm django projects
 .idea
+
+# Docker files
+docker-compose.yaml
