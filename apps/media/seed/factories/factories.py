@@ -38,6 +38,7 @@ class GenreFactory(factory.django.DjangoModelFactory):
 class ArtistFactory(factory.django.DjangoModelFactory):
     stage_name = factory.LazyAttribute(lambda x: faker.name())
     info = factory.LazyAttribute(lambda x: faker.text(max_nb_chars=200))
+    photo = factory.LazyAttribute(lambda x: faker.file_name(category="image"))
 
     class Meta:
         model = Artist
@@ -48,13 +49,15 @@ class ArtistFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
-            for gn in [extracted]:
+            for gn in extracted:
                 self.genre.add(gn)
 
 
 class SongFactory(factory.django.DjangoModelFactory):
     title = factory.LazyAttribute(lambda x: faker.pystr(min_chars=5, max_chars=15))
     duration = factory.LazyAttribute(lambda x: faker.pyint(min_value=30, max_value=300))
+    file = factory.LazyAttribute(lambda x: faker.file_name(category="audio"))
+    image = factory.LazyAttribute(lambda x: faker.file_name(category="image"))
     listens = factory.LazyAttribute(lambda x: faker.pyint())
     explicit = factory.LazyAttribute(lambda x: faker.pybool())
 
@@ -67,8 +70,8 @@ class SongFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
-            for gn in [extracted]:
-                self.artists.add(gn)
+            for ar in extracted:
+                self.artists.add(ar)
 
     @factory.post_generation
     def genres(self, create, extracted):
@@ -76,14 +79,15 @@ class SongFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
-            for gn in [extracted]:
+            for gn in extracted:
                 self.genres.add(gn)
 
 
 class AlbumFactory(factory.django.DjangoModelFactory):
     title = factory.LazyAttribute(lambda x: faker.pystr(min_chars=5, max_chars=15))
-    songs_amount = 5
+    songs_amount = 0
     release_year = factory.LazyAttribute(lambda x: faker.date_between(start_date='-30y', end_date='now'))
+    photo = factory.LazyAttribute(lambda x: faker.file_name(category="image"))
 
     class Meta:
         model = Album
@@ -94,7 +98,7 @@ class AlbumFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
-            for ar in [extracted]:
+            for ar in extracted:
                 self.artists.add(ar)
 
     @factory.post_generation
@@ -103,7 +107,7 @@ class AlbumFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
-            for gn in [extracted]:
+            for gn in extracted:
                 self.genres.add(gn)
 
     @factory.post_generation
@@ -112,12 +116,14 @@ class AlbumFactory(factory.django.DjangoModelFactory):
             return
 
         if extracted:
-            for so in [extracted]:
+            self.songs_amount = len(extracted)
+
+            for so in extracted:
                 self.songs.add(so)
 
 
 def fill_with_data(data_type, lower_border, higher_border):
-    return set(data_type[randint(0, len(data_type)-1)] for _ in range(randint(lower_border, higher_border)))
+    return frozenset(data_type[randint(0, len(data_type)-1)] for _ in range(randint(lower_border, higher_border)))
 
 
 def fill(amount=50):
@@ -133,23 +139,17 @@ def fill(amount=50):
     # creating artists here
     genres = Genre.objects.all()
     for _ in range(amount//3):
-        # genres_set = fill_with_data(genre, 1, 3)
-        ArtistFactory.create(genre=(genres[randint(0, genres.count()-1)]))
+        ArtistFactory.create(genre=fill_with_data(genres, 1, 3))
 
     # creating songs here
     artists = Artist.objects.all()
     for _ in range(amount):
-        # artists_set = fill_with_data(genre, 1, 3)
-        # genres_set = fill_with_data(genre, 1, 3)
-        SongFactory.create(artists=(artists[randint(0, artists.count()-1)]),
-                           genres=(genres[randint(0, genres.count()-1)]))
+        SongFactory.create(artists=fill_with_data(artists, 1, 3),
+                           genres=fill_with_data(genres, 1, 3))
 
     # creating albums here
     songs = Song.objects.all()
     for _ in range(amount//4):
-        # artists_set = fill_with_data(genre, 1, 3)
-        # genres_set = fill_with_data(genre, 1, 3)
-        # songs_set = fill_with_data(genre, 5, 10)
-        AlbumFactory.create(artists=(artists[randint(0, artists.count()-1)]),
-                            genres=(genres[randint(0, genres.count()-1)]),
-                            songs=(songs[randint(0, songs.count()-1)]))
+        AlbumFactory.create(artists=fill_with_data(artists, 1, 3),
+                            genres=fill_with_data(genres, 1, 3),
+                            songs=fill_with_data(songs, 5, 10))
