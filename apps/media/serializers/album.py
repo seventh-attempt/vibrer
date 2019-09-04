@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from apps.media.models.album import Album
-from apps.media.serializers.artist import ArtistForAlbumSerializer
+from apps.media.serializers.artist import ArtistShortInfoSerializer
 
 
 class AlbumSerializer(ModelSerializer):
@@ -10,9 +10,5 @@ class AlbumSerializer(ModelSerializer):
         read_only_fields = ('songs_amount',)
 
 
-class AlbumDetailSerializer(ModelSerializer):
-    artists = ArtistForAlbumSerializer(many=True,)
-
-    class Meta:
-        model = Album
-        fields = '__all__'
+class AlbumDetailSerializer(AlbumSerializer):
+    artists = ArtistShortInfoSerializer(many=True,)
