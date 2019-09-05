@@ -125,11 +125,16 @@ class AlbumFactory(factory.django.DjangoModelFactory):
 
 def fill_with_data(model: Union[Album, Artist, Genre, Song], min_limit: int, max_limit: int) -> frozenset:
     """
-    this function generates a collection with random size
-    :param model: base for the collection (e.g. Album, Artist, Genre, Song)
-    :param min_limit: defines min size of collection
-    :param max_limit: defines max size of collection
-    :return: hashable collection
+    This function generates a collection with random size.
+        Takes:
+            model: queryset with multiple instances of one type (Album, Artist, Genre or Song).
+            min_limit: defines min size of collection, integer.
+            max_limit: defines max size of collection, integer.
+        Logic:
+            Fills buffer with randomly chosen instances from model.
+            Buffer size variates from min_limit to max_limit.
+        Returns:
+            Hashable buffer with random amount of model instances.
     """
     return frozenset(
         model[randint(0, len(model)-1)]
