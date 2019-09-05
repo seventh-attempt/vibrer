@@ -4,6 +4,7 @@ import django
 
 from os import environ
 from random import randint
+from typing import Union
 
 environ.setdefault('DJANGO_SETTINGS_MODULE', 'vibrer.settings')
 django.setup()
@@ -122,8 +123,18 @@ class AlbumFactory(factory.django.DjangoModelFactory):
                 self.songs.add(so)
 
 
-def fill_with_data(data_type, lower_border, higher_border):
-    return frozenset(data_type[randint(0, len(data_type)-1)] for _ in range(randint(lower_border, higher_border)))
+def fill_with_data(model: Union[Album, Artist, Genre, Song], min_limit: int, max_limit: int) -> frozenset:
+    """
+    this function generates a collection with random size
+    :param model: base for the collection (e.g. Album, Artist, Genre, Song)
+    :param min_limit: defines min size of collection
+    :param max_limit: defines max size of collection
+    :return: hashable collection
+    """
+    return frozenset(
+        model[randint(0, len(model)-1)]
+        for _ in range(randint(min_limit, max_limit))
+    )
 
 
 def fill(amount=50):
