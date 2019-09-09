@@ -9,11 +9,16 @@ class TestSongs:
         test song details
             * check basic structure
         """
-        res = client.get(f'/api/song/{song.id}')
-        fields = ('title', 'duration', 'image', 'file', 'listens', 'artists', 'genres')
+        res = client.get(f'/api/song/{song.id}/')
         song_dict = res.json()
         assert res.status_code == 200
-        assert all(song_dict.get(k) for k in fields)
+        assert isinstance(song_dict.get('title'), str)
+        assert isinstance(song_dict.get('duration'), int)
+        assert isinstance(song_dict.get('image'), str)
+        assert isinstance(song_dict.get('file'), str)
+        assert isinstance(song_dict.get('listens'), int)
+        assert isinstance(song_dict.get('artists'), list)
+        assert isinstance(song_dict.get('genres'), list)
         assert song_dict.get('explicit') in (True, False)
 
     @pytest.mark.parametrize('song_qty', [0, 5, 10, 25, 45])
@@ -23,7 +28,7 @@ class TestSongs:
             * amount
             * data type
         """
-        res = client.get('/api/song')
+        res = client.get('/api/song/')
         assert res.status_code == 200
         assert isinstance(res.json(), list)
         assert len(res.json()) == song_qty
@@ -32,5 +37,5 @@ class TestSongs:
         """
         test song details for non-existing song
         """
-        res = client.get(f'/api/song/{faker.Faker().random_number(digits=30)}')
+        res = client.get(f'/api/song/{faker.Faker().random_number(digits=30)}/')
         assert res.status_code == 404

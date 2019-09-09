@@ -5,7 +5,7 @@ from apps.media.views.song import SongListView
 from rest_framework import routers
 
 
-router = routers.DefaultRouter(trailing_slash=False)
+router = routers.DefaultRouter()
 router.register('genre', GenreListView)
 router.register('artist', ArtistListView)
 router.register('album', AlbumListView)

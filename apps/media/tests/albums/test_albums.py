@@ -9,12 +9,16 @@ class TestAlbums:
         test albums details
             * check basic structure
         """
-        res = client.get(f'/api/album/{album.id}')
+        res = client.get(f'/api/album/{album.id}/')
         album_dict = res.json()
-        fields = ('title', 'songs_amount', 'photo', 'release_year',
-                  'artists', 'genres', 'songs', )
         assert res.status_code == 200
-        assert all(album_dict.get(k) for k in fields)
+        assert isinstance(album_dict.get('title'), str)
+        assert isinstance(album_dict.get('songs_amount'), int)
+        assert isinstance(album_dict.get('photo'), str)
+        assert isinstance(album_dict.get('release_year'), str)
+        assert isinstance(album_dict.get('artists'), list)
+        assert isinstance(album_dict.get('genres'), list)
+        assert isinstance(album_dict.get('songs'), list)
 
     @pytest.mark.parametrize('album_qty', [0, 3, 5, 7, 10])
     def test_list(self, client, albums, album_qty):
@@ -23,7 +27,7 @@ class TestAlbums:
             * amount
             * data type
         """
-        result = client.get('/api/album')
+        result = client.get('/api/album/')
 
         assert result.status_code == 200
         assert isinstance(result.json(), list)
@@ -33,6 +37,6 @@ class TestAlbums:
         """
         test album details for non-existing album
         """
-        result = client.get(f'api/album/{faker.Faker().random_number(digits=30)}')
+        result = client.get(f'api/album/{faker.Faker().random_number(digits=30)}/')
 
         assert result.status_code == 404
