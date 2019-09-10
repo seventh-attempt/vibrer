@@ -1,15 +1,15 @@
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
 from apps.media.models.artist import Artist
-from apps.media.serializers.genre import GenreShortInfoSerializer
+from apps.media.serializers.genre import GenreDetailSerializer
 
 
-class ArtistSerializer(serializers.ModelSerializer):
-    genres = GenreShortInfoSerializer(many=True,)
+class ArtistSerializer(ModelSerializer):
+    genres = GenreDetailSerializer(many=True, )
 
     class Meta:
         model = Artist
-        fields = ('url', 'pk', 'stage_name', 'info', 'photo', 'genres')
+        fields = ('url', 'stage_name', 'info', 'photo', 'genres')
 
 
 class ArtistShortInfoSerializer(ArtistSerializer):
