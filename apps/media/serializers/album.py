@@ -7,18 +7,17 @@ from apps.media.serializers.song import SongShortInfoSerializer
 
 
 class AlbumSerializer(ModelSerializer):
-    genres = GenreDetailSerializer(many=True, )
-    songs = SongShortInfoSerializer(many=True, )
+    genres = GenreDetailSerializer(many=True,)
+    songs = SongShortInfoSerializer(many=True,)
+    artists = ArtistShortInfoSerializer(many=True,)
 
     class Meta:
         model = Album
         fields = ('url', 'title', 'songs_amount', 'photo',
-                  'release_year', 'genres', 'songs')
+                  'release_year', 'artists', 'genres', 'songs',)
         read_only_fields = ('songs_amount',)
 
 
-class AlbumDetailSerializer(AlbumSerializer):
-    artists = ArtistShortInfoSerializer(many=True, )
-
+class AlbumShortInfoSerializer(AlbumSerializer):
     class Meta(AlbumSerializer.Meta):
-        fields = AlbumSerializer.Meta.fields + ('artists',)
+        fields = ('url', 'title', 'photo', 'artists',)

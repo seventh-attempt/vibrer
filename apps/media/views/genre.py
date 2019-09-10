@@ -4,6 +4,6 @@ from apps.media.models.genre import Genre
 from apps.media.serializers.genre import GenreDetailSerializer
 
 
-class GenreListView(viewsets.ReadOnlyModelViewSet):
+class GenreListView(viewsets.ModelViewSet):
     serializer_class = GenreDetailSerializer
     queryset = Genre.objects.all()
