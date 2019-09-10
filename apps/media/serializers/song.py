@@ -18,4 +18,4 @@ class SongDetailSerializer(ModelSerializer):
 
 class SongShortInfoSerializer(SongDetailSerializer):
     class Meta(SongDetailSerializer.Meta):
-        fields = ('url', 'title', 'duration', 'explicit', 'image', )
+        fields = ('url', 'title', 'duration', 'explicit', 'image')

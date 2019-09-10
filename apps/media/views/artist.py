@@ -13,6 +13,7 @@ class ArtistListView(viewsets.ModelViewSet):
     filterset_fields = ('genres',)
 
     def get_serializer_class(self):
-        if hasattr(self, 'action') and self.action == 'retrieve':
+        if hasattr(self, 'action') and \
+                self.action in ('retrieve', 'update', 'partial_update'):
             return ArtistSerializer
         return ArtistShortInfoSerializer

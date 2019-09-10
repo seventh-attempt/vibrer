@@ -14,10 +14,10 @@ class AlbumSerializer(ModelSerializer):
     class Meta:
         model = Album
         fields = ('url', 'title', 'songs_amount', 'photo',
-                  'release_year', 'artists', 'genres', 'songs',)
+                  'release_year', 'artists', 'genres', 'songs')
         read_only_fields = ('songs_amount',)
 
 
 class AlbumShortInfoSerializer(AlbumSerializer):
     class Meta(AlbumSerializer.Meta):
-        fields = ('url', 'title', 'photo', 'artists',)
+        fields = ('url', 'title', 'photo', 'artists')

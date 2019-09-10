@@ -10,10 +10,11 @@ from apps.media.serializers.album import (
 class AlbumListView(viewsets.ModelViewSet):
     queryset = Album.objects.all()
     filter_backends = [DjangoFilterBackend, OrderingFilter]
-    filterset_fields = ('genres', 'artists',)
+    filterset_fields = ('genres', 'artists')
     ordering_fields = ('release_year',)
 
     def get_serializer_class(self):
-        if hasattr(self, 'action') and self.action == 'retrieve':
+        if hasattr(self, 'action') and \
+                self.action in ('retrieve', 'update', 'partial_update'):
             return AlbumSerializer
         return AlbumShortInfoSerializer

@@ -9,9 +9,11 @@ from apps.media.serializers.song import (
 class SongListView(viewsets.ModelViewSet):
     queryset = Song.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ('genres', 'artists')
+    filterset_fields = ('genres', 'artists',)
 
     def get_serializer_class(self):
-        if hasattr(self, 'action') and self.action == 'retrieve':
+        print(self.action)
+        if hasattr(self, 'action') and \
+                self.action in ('retrieve', 'update', 'partial_update'):
             return SongDetailSerializer
         return SongShortInfoSerializer

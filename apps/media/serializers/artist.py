@@ -9,9 +9,9 @@ class ArtistSerializer(ModelSerializer):
 
     class Meta:
         model = Artist
-        fields = ('url', 'stage_name', 'info', 'photo', 'genres',)
+        fields = ('url', 'stage_name', 'info', 'photo', 'genres')
 
 
 class ArtistShortInfoSerializer(ArtistSerializer):
     class Meta(ArtistSerializer.Meta):
-        fields = ('url', 'stage_name',)
+        fields = ('url', 'stage_name')
