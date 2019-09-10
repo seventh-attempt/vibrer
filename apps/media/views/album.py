@@ -15,7 +15,6 @@ class AlbumListView(viewsets.ModelViewSet):
     http_method_names = ('get',)
 
     def get_serializer_class(self):
-        if hasattr(self, 'action') and \
-                self.action in ('retrieve', 'update', 'partial_update'):
-            return AlbumSerializer
-        return AlbumShortInfoSerializer
+        if getattr(self, 'action', None) == 'list':
+            return AlbumShortInfoSerializer
+        return AlbumSerializer
