@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from apps.media.models.artist import Artist
 from apps.media.serializers.genre import GenreShortInfoSerializer
 

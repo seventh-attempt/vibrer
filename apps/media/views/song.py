@@ -1,5 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
+
 from apps.media.models.song import Song
 from apps.media.serializers.song import SongDetailSerializer
 

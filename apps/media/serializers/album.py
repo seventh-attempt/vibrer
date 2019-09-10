@@ -1,4 +1,5 @@
-from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer
+from rest_framework.serializers import ModelSerializer
+
 from apps.media.models.album import Album
 from apps.media.serializers.artist import ArtistShortInfoSerializer
 from apps.media.serializers.genre import GenreShortInfoSerializer
@@ -11,7 +12,8 @@ class AlbumSerializer(ModelSerializer):
 
     class Meta:
         model = Album
-        fields = ('url', 'pk', 'title', 'songs_amount', 'photo', 'release_year', 'genres', 'songs')
+        fields = ('url', 'pk', 'title', 'songs_amount', 'photo',
+                  'release_year', 'genres', 'songs')
         read_only_fields = ('songs_amount',)
 
 

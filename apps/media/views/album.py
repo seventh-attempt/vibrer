@@ -1,8 +1,9 @@
-from rest_framework import viewsets
-from apps.media.models.album import Album
-from apps.media.serializers.album import AlbumSerializer, AlbumDetailSerializer
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets
 from rest_framework.filters import OrderingFilter
+
+from apps.media.models.album import Album
+from apps.media.serializers.album import AlbumDetailSerializer, AlbumSerializer
 
 
 class AlbumListView(viewsets.ReadOnlyModelViewSet):
