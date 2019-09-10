@@ -12,6 +12,7 @@ class AlbumListView(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = ('genres', 'artists')
     ordering_fields = ('release_year',)
+    http_method_names = ('get',)
 
     def get_serializer_class(self):
         if hasattr(self, 'action') and \

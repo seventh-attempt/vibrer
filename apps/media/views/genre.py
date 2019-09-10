@@ -7,3 +7,4 @@ from apps.media.serializers.genre import GenreDetailSerializer
 class GenreListView(viewsets.ModelViewSet):
     serializer_class = GenreDetailSerializer
     queryset = Genre.objects.all()
+    http_method_names = ('get',)

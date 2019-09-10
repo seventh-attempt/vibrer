@@ -10,10 +10,9 @@ class SongListView(viewsets.ModelViewSet):
     queryset = Song.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ('genres', 'artists',)
+    http_method_names = ('get',)
 
     def get_serializer_class(self):
-        print(self.action)
-        if hasattr(self, 'action') and \
-                self.action in ('retrieve', 'update', 'partial_update'):
-            return SongDetailSerializer
-        return SongShortInfoSerializer
+        if getattr(self, 'action', None) == 'list':
+            return SongShortInfoSerializer
+        return SongDetailSerializer

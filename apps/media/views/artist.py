@@ -11,9 +11,9 @@ class ArtistListView(viewsets.ModelViewSet):
     queryset = Artist.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ('genres',)
+    http_method_names = ('get',)
 
     def get_serializer_class(self):
-        if hasattr(self, 'action') and \
-                self.action in ('retrieve', 'update', 'partial_update'):
-            return ArtistSerializer
-        return ArtistShortInfoSerializer
+        if getattr(self, 'action', None) == 'list':
+            return ArtistShortInfoSerializer
+        return ArtistSerializer
