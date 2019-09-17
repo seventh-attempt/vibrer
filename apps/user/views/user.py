@@ -31,7 +31,7 @@ class UserView(ModelViewSet):
         return UserSerializer
 
 
-class UserRegistrationView(APIView): # was ViewSet
+class UserRegistrationView(APIView):
     serializer_class = UserRegistrationSerializer
 
     def post(self, request):
