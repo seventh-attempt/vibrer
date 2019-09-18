@@ -1,20 +1,13 @@
-from os import environ
 from random import randint
 from typing import Union
 
-import django
 import factory
 import faker
-
-environ.setdefault('DJANGO_SETTINGS_MODULE', 'vibrer.settings')
-django.setup()
-
 
 from apps.media.models.album import Album
 from apps.media.models.artist import Artist
 from apps.media.models.genre import Genre
 from apps.media.models.song import Song
-
 
 GENRES = [
     'Hip - Hop',
@@ -58,6 +51,7 @@ class GenreFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = Genre
+        # django_get_or_create = ('name', )
 
 
 class ArtistFactory(factory.django.DjangoModelFactory):
