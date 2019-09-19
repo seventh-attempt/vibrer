@@ -165,7 +165,7 @@ class PlaylistFactory(factory.django.DjangoModelFactory):
 class UserFactory(factory.django.DjangoModelFactory):
     username = factory.Faker('pystr', min_chars=5, max_chars=20)
     email = factory.Faker('email')
-    password = factory.Faker('pystr', min_chars=5, max_chars=20)
+    password = factory.PostGenerationMethodCall('set_password', 'password')
     photo = factory.Faker('file_name', category='image')
     followers_amount = 0
     is_staff = factory.Faker('pybool')

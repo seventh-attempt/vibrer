@@ -7,7 +7,7 @@ from apps.user.models.playlist import Playlist
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, username, email, password=None, is_staff=False):
+    def create_user(self, username, email, password=None, is_staff=False, is_superuser=False):
 
         if not username:
             raise ValueError("Users must have the username")
@@ -20,12 +20,17 @@ class UserManager(BaseUserManager):
                           email=self.normalize_email(email))
         user.set_password(password)
         user.is_staff = is_staff
+        user.is_superuser = is_superuser
         user.save()
         return user
 
     def create_staffuser(self, username, email, password=None):
         user = self.create_user(username, email, password, is_staff=True)
         return user
+
+    def create_superuser(self, username, email, password=None):
+        user = self.create_user(username, email, password, is_staff=True, is_superuser=True)
+        user.is_superuser = True
 
 
 class User(AbstractBaseUser):
