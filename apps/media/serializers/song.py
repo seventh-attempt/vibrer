@@ -54,8 +54,8 @@ class SongCUSerializer(ModelSerializer):
         if file:
             instance.duration = round(MP3(file).info.length)
         instance.save()
-        if artists_data:
-            instance.genres.set(genres_data)
         if genres_data:
+            instance.genres.set(genres_data)
+        if artists_data:
             instance.artists.set(artists_data)
         return instance
