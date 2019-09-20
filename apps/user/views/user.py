@@ -21,7 +21,6 @@ User = get_user_model()
 
 
 class UserView(ModelViewSet):
-    permission_classes = (AllowAny, )
     queryset = User.objects.all()
     http_method_names = ('get', )
 
@@ -33,7 +32,6 @@ class UserView(ModelViewSet):
 
 
 class UserRegistrationView(APIView): # was ViewSet
-    permission_classes = (AllowAny, )
     serializer_class = UserRegistrationSerializer
 
     def post(self, request):
@@ -50,7 +48,6 @@ class UserRegistrationView(APIView): # was ViewSet
 
 
 class UserLoginView(GenericAPIView):
-    permission_classes = (AllowAny, )
     serializer_class = UserLoginSerializer
 
     def post(self, request):

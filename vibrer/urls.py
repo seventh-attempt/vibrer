@@ -17,6 +17,17 @@ router = ApiRouter()
 router.extend(me_router)
 router.extend(us_router)
 
+
+class ApiRouter(routers.DefaultRouter):
+
+    def extend(self, router):
+        self.registry.extend(router.registry)
+
+
+router = ApiRouter()
+router.extend(me_router)
+router.extend(us_router)
+
 urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/', include(router.urls)),
