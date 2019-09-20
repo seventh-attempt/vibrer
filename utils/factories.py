@@ -1,4 +1,3 @@
-from os import environ
 from random import randint
 from typing import Union
 
@@ -9,7 +8,6 @@ from apps.media.models.album import Album
 from apps.media.models.artist import Artist
 from apps.media.models.genre import Genre
 from apps.media.models.song import Song
-from apps.user.models.playlist import Playlist
 from apps.user.models.user import User
 
 
@@ -119,26 +117,6 @@ class AlbumFactory(factory.django.DjangoModelFactory):
                 self.songs.add(so)
 
 
-class PlaylistFactory(factory.django.DjangoModelFactory):
-    name = factory.Faker('pystr', min_chars=5, max_chars=10)
-    songs_amount = 0
-    is_private = factory.Faker('pybool')
-
-    class Meta:
-        model = Playlist
-
-    @factory.post_generation
-    def songs(self, create, extracted):
-        if not create:
-            return
-
-        if extracted:
-            self.songs_amount = len(extracted)
-
-            for so in extracted:
-                self.songs.add(so)
-
-
 class UserFactory(factory.django.DjangoModelFactory):
     username = factory.Faker('pystr', min_chars=5, max_chars=20)
     email = factory.Faker('email')
@@ -162,15 +140,6 @@ class UserFactory(factory.django.DjangoModelFactory):
                 self.followers.add(fo)
 
     @factory.post_generation
-    def playlists(self, create, extracted):
-        if not create:
-            return
-
-        if extracted:
-            for pl in extracted:
-                self.playlists.add(pl)
-
-    @factory.post_generation
     def liked_songs(self, create, extracted):
         if not create:
             return
@@ -180,7 +149,7 @@ class UserFactory(factory.django.DjangoModelFactory):
                 self.liked_songs.add(ls)
 
 
-def fill_with_data(model: Union[Album, Artist, Genre, Song, Playlist, User],
+def fill_with_data(model: Union[Album, Artist, Genre, Song, User],
                    min_limit: int, max_limit: int) -> frozenset:
     """
     This function generates a collection with random size.
@@ -207,7 +176,6 @@ def fill(amount=50):
     Artist.objects.all().delete()
     Genre.objects.all().delete()
     Song.objects.all().delete()
-    Playlist.objects.all().delete()
     User.objects.all().delete()
 
     # creating genres here
@@ -232,14 +200,7 @@ def fill(amount=50):
                             genres=fill_with_data(genres, 1, 3),
                             songs=fill_with_data(songs, 5, 10))
 
-    # creating playlists here
-    for _ in range(amount):
-        PlaylistFactory.create(songs=fill_with_data(songs, 5, 10))
-
-    # creating users here
-    playlists = Playlist.objects.all()
     for _ in range(amount):
         users = User.objects.all()
         UserFactory.create(followers=fill_with_data(users, 0, len(users)),
-                           playlists=fill_with_data(playlists, 1, 3),
                            liked_songs=fill_with_data(songs, 5, 10))

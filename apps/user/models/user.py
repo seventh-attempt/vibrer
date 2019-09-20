@@ -3,7 +3,6 @@ from django.db.models import (BooleanField, CharField, EmailField, ImageField,
                               IntegerField, ManyToManyField)
 
 from apps.media.models.song import Song
-from apps.user.models.playlist import Playlist
 
 
 class UserManager(BaseUserManager):
@@ -39,7 +38,6 @@ class User(AbstractBaseUser):
     photo = ImageField(default=None, upload_to='media/')
     followers = ManyToManyField('User', related_name='users')
     followers_amount = IntegerField(default=0)
-    playlists = ManyToManyField(Playlist, related_name='users')
     liked_songs = ManyToManyField(Song, related_name='users')
     is_staff = BooleanField(default=False)
 

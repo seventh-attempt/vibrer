@@ -10,7 +10,7 @@ from rest_framework.status import (
 )
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 
 from apps.user.serializers.user import (
     UserSerializer, UserShortInfoSerializer, UserRegistrationSerializer,
