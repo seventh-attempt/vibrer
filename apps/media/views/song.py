@@ -22,8 +22,3 @@ class SongView(viewsets.ModelViewSet):
                 return SongDetailSerializer
         elif self.request and method in ('POST', 'PUT'):
             return SongCUSerializer
-
-    def get_object(self):
-        # breakpoint()
-        return super().get_object()
-

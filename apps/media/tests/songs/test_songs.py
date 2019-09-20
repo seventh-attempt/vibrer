@@ -88,33 +88,3 @@ class TestSongs:
         assert res.status_code == 200
         assert song_dict.get("title") == title
         assert song_dict.get("genres") == genres
-
-    # TODO fix file
-    # def test_update_all(self, client, song, artists, genres):
-    #     """
-    #     test song update all fields
-    #     """
-    #     title = faker.Faker().pystr(min_chars=5, max_chars=15)
-    #     explicit = faker.Faker().pybool()
-    #     genres = [genre.id for genre in genres]
-    #     artists = [artist.id for artist in artists]
-    #     with open('test/song.mp3', 'rb') as file:
-    #         duration = round(MP3(file).info.length)
-    #         data = {
-    #             'title': title,
-    #             'duration': duration,
-    #             'explicit': explicit,
-    #             'file': file,
-    #             'genres': genres,
-    #             'artists': artists
-    #         }
-    #         res = client.put(f'/api/song/{song.id}/', data=data)
-    #         song_dict = res.json()
-    #         assert res.status_code == 201
-    #         assert song_dict.get("title") == title
-    #         assert song_dict.get("duration") == duration
-    #         assert song_dict.get("explicit") == explicit
-    #         assert song_dict.get("genres") == genres
-    #         assert song_dict.get("artists") == artists
-    #         file_name = song_dict.get('file').rsplit('/', 1)[-1]
-    #         os.remove(f'media/{file_name}')

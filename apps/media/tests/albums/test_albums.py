@@ -106,6 +106,6 @@ class TestAlbums:
         assert res.status_code == 200
         assert album_dict.get("title") == title
         assert album_dict.get("genres") == genres
-        assert album_dict.get("artists") == artists
+        assert sorted(album_dict.get("artists")) == sorted(artists)
         assert album_dict.get("songs") == songs
         assert album_dict.get("release_year") == release_year
