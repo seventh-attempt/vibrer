@@ -69,7 +69,7 @@ class TestArtists:
         artist_dict = res.json()
         assert res.status_code == 200
         assert artist_dict.get("info") == info
-        assert artist_dict.get("genres") == genres
+        assert set(artist_dict.get("genres")) == set(genres)
 
     def test_update_all(self, client, artist, genres):
         """

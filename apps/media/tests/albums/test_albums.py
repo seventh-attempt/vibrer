@@ -85,7 +85,7 @@ class TestAlbums:
         album_dict = res.json()
         assert res.status_code == 200
         assert album_dict.get("title") == title
-        assert album_dict.get("genres") == genres
+        assert set(album_dict.get("genres")) == set(genres)
         assert set(album_dict.get("artists")) == set(artists)
         assert set(album_dict.get("songs")) == set(songs)
 
@@ -106,7 +106,7 @@ class TestAlbums:
         album_dict = res.json()
         assert res.status_code == 200
         assert album_dict.get("title") == title
-        assert album_dict.get("genres") == genres
+        assert set(album_dict.get("genres")) == set(genres)
         assert set(album_dict.get("artists")) == set(artists)
         assert set(album_dict.get("songs")) == set(songs)
         assert album_dict.get("release_year") == release_year
