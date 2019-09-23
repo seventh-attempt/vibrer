@@ -20,3 +20,13 @@ def song_qty():
 @pytest.fixture
 def songs(song_qty):
     return SongFactory.create_batch(size=song_qty, explicit=False)
+
+
+@pytest.fixture
+def artists():
+    return ArtistFactory.create_batch(size=2)
+
+
+@pytest.fixture
+def genres():
+    return GenreFactory.create_batch(size=2)
