@@ -146,10 +146,3 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
-# Max upload size in MB
-MAX_UPLOAD_IMAGE_SIZE = 5
-MAX_UPLOAD_SONG_SIZE = 30
-
-
-ALLOWED_SONG_EXTENSIONS = ('mp3',)

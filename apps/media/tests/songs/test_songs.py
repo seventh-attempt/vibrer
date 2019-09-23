@@ -1,9 +1,7 @@
 import json
-import os
 
 import faker
 import pytest
-from mutagen.mp3 import MP3
 
 
 @pytest.mark.django_db
@@ -49,30 +47,34 @@ class TestSongs:
         """
         test song create endpoint
         """
-        title = faker.Faker().pystr(min_chars=5, max_chars=15)
-        explicit = faker.Faker().pybool()
+        factory = faker.Faker()
+        title = factory.pystr(min_chars=5, max_chars=15)
+        explicit = factory.pybool()
+        file = factory.url(schemes=None) + factory.file_name(category='audio',
+                                                             extension='mp3')
+        image = factory.url(schemes=None) + factory.file_name(category='image',
+                                                              extension='png')
         genres = [genre.id for genre in genres]
         artists = [artist.id for artist in artists]
-        with open('test/song.mp3', 'rb') as file:
-            duration = round(MP3(file).info.length)
-            data = {
-                'title': title,
-                'duration': duration,
-                'explicit': explicit,
-                'file': file,
-                'genres': genres,
-                'artists': artists
-            }
-            res = client.post('/api/song/', data=data)
-            song_dict = res.json()
-            assert res.status_code == 201
-            assert song_dict.get("title") == title
-            assert song_dict.get("duration") == duration
-            assert song_dict.get("explicit") == explicit
-            assert song_dict.get("genres") == genres
-            assert song_dict.get("artists") == artists
-            file_name = song_dict.get('file').rsplit('/', 1)[-1]
-            os.remove(f'media/{file_name}')
+        data = {
+            'title': title,
+            'explicit': explicit,
+            'image': image,
+            'file': file,
+            'genres': genres,
+            'artists': artists
+        }
+        data = json.dumps(data)
+        res = client.post('/api/song/', data=data,
+                          content_type='application/json')
+        song_dict = res.json()
+        assert res.status_code == 201
+        assert song_dict.get('title') == title
+        assert song_dict.get('image') == image
+        assert song_dict.get('file') == file
+        assert song_dict.get("explicit") == explicit
+        assert set(song_dict.get("genres")) == set(genres)
+        assert set(song_dict.get("artists")) == set(artists)
 
     def test_update_m2m(self, client, song, genres):
         """
@@ -87,4 +89,36 @@ class TestSongs:
         song_dict = res.json()
         assert res.status_code == 200
         assert song_dict.get("title") == title
-        assert song_dict.get("genres") == genres
+        assert set(song_dict.get("genres")) == set(genres)
+
+    def test_update_all(self, client, song, genres, artists):
+        """
+        test artist update all fields
+        """
+        factory = faker.Faker()
+        title = factory.pystr(min_chars=5, max_chars=15)
+        explicit = factory.pybool()
+        file = factory.url(schemes=None) + factory.file_name(category='audio',
+                                                             extension='mp3')
+        image = factory.url(schemes=None) + factory.file_name(category='image',
+                                                              extension='png')
+        genres = [genre.id for genre in genres]
+        artists = [artist.id for artist in artists]
+        data = {
+            'title': title,
+            'explicit': explicit,
+            'image': image,
+            'file': file,
+            'genres': genres,
+            'artists': artists
+        }
+        res = client.put(f'/api/song/{song.id}/', data=data,
+                         content_type="application/json")
+        song_dict = res.json()
+        assert res.status_code == 200
+        assert song_dict.get("title") == title
+        assert song_dict.get("image") == image
+        assert song_dict.get("file") == file
+        assert song_dict.get("explicit") == explicit
+        assert set(song_dict.get("genres")) == set(genres)
+        assert set(song_dict.get("artists")) == set(artists)

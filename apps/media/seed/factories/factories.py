@@ -82,8 +82,8 @@ class SongFactory(factory.django.DjangoModelFactory):
     duration = factory.LazyAttribute(
         lambda x: faker.pyint(min_value=30, max_value=300))
     file = factory.LazyAttribute(
-        lambda x: faker.file_name(category='audio', extension='mp3'))
-    image = factory.LazyAttribute(lambda x: faker.file_name(category="image"))
+        lambda x: faker.url(schemes=None) + faker.file_name(category='audio', extension='mp3'))
+    image = factory.LazyAttribute(lambda x: faker.url(schemes=None) + faker.file_name(category="image"))
     listens = factory.LazyAttribute(lambda x: faker.pyint())
     explicit = factory.LazyAttribute(lambda x: faker.pybool())
 
