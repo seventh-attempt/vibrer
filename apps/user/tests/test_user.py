@@ -20,6 +20,11 @@ class TestUser:
         assert res.status_code == 200
         assert user_dict.get('id') == user.id
         assert user_dict.get('token') == str(token)
+        res = client.get(f'/auth/me/', content_type="application/json",
+                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+        user_dict = res.json()
+        assert user_dict.get('email') == user.email
+        assert user_dict.get('username') == user.username
 
     def test_about(self, client, user, token):
         """
@@ -46,6 +51,9 @@ class TestUser:
         user_dict = res.json()
         assert res.status_code == 200
         assert user_dict.get('details') == 'Logged out successfully'
+        res = client.get(f'/auth/me/', content_type="application/json",
+                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+        assert res.status_code == 401
 
     def test_registration(self, client):
         """
