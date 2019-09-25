@@ -1,7 +1,10 @@
 # from django.core.validators import validate_image_file_extension
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models import (
-    BooleanField, CharField, ManyToManyField, Model,
-    PositiveIntegerField, URLField)
+    BooleanField, CharField, ManyToManyField, Model, PositiveIntegerField,
+    URLField)
+
+from apps.likes.models.like import Liked
 
 
 class Song(Model):
@@ -13,6 +16,11 @@ class Song(Model):
     explicit = BooleanField(default=False)
     artists = ManyToManyField('Artist', related_name='songs')
     genres = ManyToManyField('Genre', related_name='songs')
+    likes = GenericRelation(Liked, related_query_name='songs')
 
     def __str__(self):
         return self.title
+
+    @property
+    def total_likes(self):
+        return self.likes.count()

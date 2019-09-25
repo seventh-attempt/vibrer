@@ -2,6 +2,7 @@ from rest_framework.serializers import ModelSerializer
 
 from apps.media.serializers.song import SongShortInfoSerializer
 from apps.user.models.playlist import Playlist
+from apps.likes import mixin_tools as likes_services
 
 
 class PlaylistSerializer(ModelSerializer):
@@ -11,6 +12,10 @@ class PlaylistSerializer(ModelSerializer):
         model = Playlist
         fields = ('name', 'songs', 'songs_amount', 'is_private', 'owner')
         read_only_fields = ('songs_amount',)
+
+    def get_is_fan(self, obj) -> bool:
+        user = self.context.get('request').user
+        return likes_services.is_fan(obj, user)
 
 
 class PlaylistShortInfoSerializer(ModelSerializer):

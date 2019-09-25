@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 
+from apps.likes import mixin_tools as likes_services
 from apps.media.models.artist import Artist
 from apps.media.serializers.genre import GenreDetailSerializer
 
@@ -10,6 +11,10 @@ class ArtistDetailSerializer(ModelSerializer):
     class Meta:
         model = Artist
         fields = ('url', 'stage_name', 'info', 'photo', 'genres')
+
+    def get_is_fan(self, obj) -> bool:
+        user = self.context.get('request').user
+        return likes_services.is_fan(obj, user)
 
 
 class ArtistShortInfoSerializer(ArtistDetailSerializer):

@@ -2,13 +2,14 @@ from random import randint
 from typing import Union
 
 import factory
-
+from django.contrib.contenttypes.models import ContentType
 from apps.media.models.album import Album
 from apps.media.models.artist import Artist
 from apps.media.models.genre import Genre
 from apps.media.models.song import Song
 from apps.user.models.playlist import Playlist
 from apps.user.models.user import User
+from apps.likes.models.like import Liked
 
 GENRES = [
     'Hip - Hop',
@@ -138,15 +139,6 @@ class UserFactory(factory.django.DjangoModelFactory):
             for fo in extracted:
                 self.followers.add(fo)
 
-    @factory.post_generation
-    def liked_songs(self, create, extracted):
-        if not create:
-            return
-
-        if extracted:
-            for ls in extracted:
-                self.liked_songs.add(ls)
-
 
 class PlaylistFactory(factory.django.DjangoModelFactory):
     name = factory.Faker('pystr', min_chars=5, max_chars=10)
@@ -167,6 +159,50 @@ class PlaylistFactory(factory.django.DjangoModelFactory):
 
             for so in extracted:
                 self.songs.add(so)
+
+
+class LikedObjectFactory(factory.django.DjangoModelFactory):
+
+    user = factory.SubFactory(UserFactory)
+    object_id = factory.SelfAttribute('content_object.id')
+    content_type = factory.LazyAttribute(
+        lambda o: ContentType.objects.get_for_model(o.content_object))
+
+    class Meta:
+        exclude = ['content_object']
+        abstract = True
+
+
+class LikedArtistFactory(LikedObjectFactory):
+    content_object = factory.SubFactory(ArtistFactory)
+    like_type = Liked.ARTIST
+
+    class Meta:
+        model = Liked
+
+
+class LikedAlbumFactory(LikedObjectFactory):
+    content_object = factory.SubFactory(AlbumFactory)
+    like_type = Liked.ALBUM
+
+    class Meta:
+        model = Liked
+
+
+class LikedSongFactory(LikedObjectFactory):
+    content_object = factory.SubFactory(SongFactory)
+    like_type = Liked.SONG
+
+    class Meta:
+        model = Liked
+
+
+class LikedPlaylistFactory(LikedObjectFactory):
+    content_object = factory.SubFactory(PlaylistFactory)
+    like_type = Liked.PLAYLIST
+
+    class Meta:
+        model = Liked
 
 
 def fill_with_data(model: Union[Album, Artist, Genre, Song, User, Playlist],
@@ -191,6 +227,10 @@ def fill_with_data(model: Union[Album, Artist, Genre, Song, User, Playlist],
     )
 
 
+def get_id(obj: frozenset) -> int:
+    return set(obj).pop().id
+
+
 def fill(amount=50):
     Album.objects.all().delete()
     Artist.objects.all().delete()
@@ -198,6 +238,7 @@ def fill(amount=50):
     Song.objects.all().delete()
     User.objects.all().delete()
     Playlist.objects.all().delete()
+    Liked.objects.all().delete()
 
     # creating genres here
     for _ in range(len(GENRES)):
@@ -222,13 +263,37 @@ def fill(amount=50):
                             songs=fill_with_data(songs, 5, 10))
 
     # creating users here
+    albums = Album.objects.all()
     for _ in range(amount):
         users = User.objects.all()
         user = UserFactory.create(
-            followers=fill_with_data(users, 0, len(users)),
-            liked_songs=fill_with_data(songs, 5, 10)
+            followers=fill_with_data(users, 0, len(users)//5)
         )
-        # creating playlists for user
+        # creating playlists and likes for user
         for _ in range(amount//10):
-            PlaylistFactory.create(songs=fill_with_data(songs, 5, 10),
-                                   owner=user)
+            PlaylistFactory.create(
+                songs=fill_with_data(songs, 5, 10),
+                owner=user
+            )
+            LikedArtistFactory.create(
+                user=user,
+                object_id=get_id(fill_with_data(artists, 1, 1))
+            )
+            LikedAlbumFactory.create(
+                user=user,
+                object_id=get_id(fill_with_data(albums, 1, 1))
+            )
+            LikedSongFactory.create(
+                user=user,
+                object_id=get_id(fill_with_data(songs, 1, 1))
+            )
+
+    # creating likes for playlists here
+    users = User.objects.all()
+    for _ in range(amount//10):
+        for user in users:
+            playlists = Playlist.objects.filter(is_private=False).exclude(owner=user)
+            LikedPlaylistFactory.create(
+                user=user,
+                object_id=get_id(fill_with_data(playlists, 1, 1))
+            )
