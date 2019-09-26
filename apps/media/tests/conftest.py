@@ -3,9 +3,16 @@ import pytest
 from rest_auth.app_settings import TokenSerializer, create_token
 from rest_auth.models import TokenModel
 
+from django_redis import get_redis_connection
+
 from utils.factories import (
     SongFactory, UserFactory, GenreFactory, AlbumFactory, ArtistFactory
 )
+
+
+@pytest.fixture
+def redis():
+    return get_redis_connection('default')
 
 
 @pytest.fixture

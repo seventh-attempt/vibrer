@@ -1,6 +1,5 @@
 import json
 
-import django_redis
 import faker
 import pytest
 
@@ -45,12 +44,11 @@ class TestSongs:
         assert res.status_code == 404
 
     @pytest.mark.parametrize('is_staff', [True])
-    def test_listen(self, client, song, token, user):
+    def test_listen(self, client, song, token, user, redis):
         """
         test song/:song_id/listen endpoint
         """
         factory = faker.Faker()
-        username = user.username
         title = song.title
         duration = song.duration
 
@@ -58,6 +56,9 @@ class TestSongs:
         end_second = factory.pyint(min_value=start_second+1,
                                    max_value=factory.pyint(min_value=start_second+1,
                                                            max_value=min(start_second+30, duration)))
+
+        redis.flushall()
+
         data = {
             'start_second': start_second,
             'end_second': end_second
@@ -66,15 +67,12 @@ class TestSongs:
         res = client.post(f'/api/song/{song.id}/listen/', data=data,
                           content_type='application/json',
                           **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
-        # breakpoint()
-        con = django_redis.get_redis_connection()
 
         song_dict = res.json()
         assert res.status_code == 200
         assert song_dict.get('title') == title
         assert song_dict.get('duration') == duration
-        assert set(con.smembers(f'{username}-{title}-piece')) == {f'{start_second}-{end_second}'.encode()}
-        # assert song_dict.get('cached-pieces') == [f'{start_second}-{end_second}']
+        assert redis.smembers(f'{user.id}-{song.id}-piece') == {f'{start_second}-{end_second}'.encode()}
 
     @pytest.mark.parametrize('is_staff', [True])
     def test_create(self, client, artists_for_added, genres, token, user):
