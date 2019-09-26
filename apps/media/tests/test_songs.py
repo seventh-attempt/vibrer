@@ -57,8 +57,6 @@ class TestSongs:
                                    max_value=factory.pyint(min_value=start_second+1,
                                                            max_value=min(start_second+30, duration)))
 
-        redis.flushall()
-
         data = {
             'start_second': start_second,
             'end_second': end_second

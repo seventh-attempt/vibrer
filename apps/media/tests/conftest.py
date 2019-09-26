@@ -12,7 +12,8 @@ from utils.factories import (
 
 @pytest.fixture
 def redis():
-    return get_redis_connection('default')
+    yield get_redis_connection('default')
+    get_redis_connection('default').flushall()
 
 
 @pytest.fixture

@@ -38,10 +38,11 @@ class SongView(ModelViewSet):
         start_second = request.data.get('start_second')
         end_second = request.data.get('end_second')
         song = Song.objects.get(pk=kwargs['pk'])
-
         err_details = None
 
-        if start_second is None or end_second is None:
+        if type(start_second) is not int or type(end_second) is not int:
+            err_details = "'start_second' and 'end_second' must be integer"
+        elif start_second is None or end_second is None:
             err_details = "'start_secnod' or 'end_second' parameter is missing"
         elif start_second >= end_second:
             err_details = "'start_second' have to be less than 'end_second'"
