@@ -39,20 +39,24 @@ class SongView(ModelViewSet):
         end_second = request.data.get('end_second')
         song = Song.objects.get(pk=kwargs['pk'])
 
-        if not all([
-            start_second is not None,
-            end_second,
-            start_second < end_second,
-            start_second >= 0,
-            (end_second - start_second) <= 30,
-            end_second <= song.duration,
-        ]):
-            return Response({'Details': 'You have to set correct '
-                                        '\'start_second\' and \'end_second\' '
-                                        'parameters'}, status=HTTP_400_BAD_REQUEST)
+        details = None
+
+        if start_second is None or end_second is None:
+            details = '\'start_secnod\' or \'end_second\' parameter is missing'
+        elif start_second >= end_second:
+            details = '\'start_second\' have to be less than \'end_second\''
+        elif start_second < 0:
+            details = '\'start_second\' have to be positive'
+        elif end_second > song.duration:
+            details = '\'end_second\' must not exceed song duration'
+        elif end_second - start_second > 30:
+            details = 'piece have to be 30 seconds or less'
+
+        if details:
+            return Response({'Details': details}, status=HTTP_400_BAD_REQUEST)
 
         user = request.user
         con = get_redis_connection('default')
-        con.sadd(f'{user}-{song}-piece', f'{start_second}-{end_second}')
+        con.sadd(f'{user}-{song}-piece', f'{start_second}-{end_second}'.encode())
 
-        return Response({'title': song.title, 'duration': song.duration, 'cached-pieces': con.smembers(f'{user}-{song}-piece')})
+        return Response({'title': song.title, 'duration': song.duration})
