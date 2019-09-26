@@ -1,4 +1,3 @@
-# from django.core.validators import validate_image_file_extension
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models import (
     BooleanField, CharField, ManyToManyField, Model, PositiveIntegerField,

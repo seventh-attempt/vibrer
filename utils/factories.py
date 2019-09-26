@@ -3,13 +3,14 @@ from typing import Union
 
 import factory
 from django.contrib.contenttypes.models import ContentType
+
+from apps.likes.models.like import Liked
 from apps.media.models.album import Album
 from apps.media.models.artist import Artist
 from apps.media.models.genre import Genre
 from apps.media.models.song import Song
 from apps.user.models.playlist import Playlist
 from apps.user.models.user import User
-from apps.likes.models.like import Liked
 
 GENRES = [
     'Hip - Hop',

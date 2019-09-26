@@ -1,17 +1,11 @@
 import pytest
-from rest_auth.app_settings import TokenSerializer, create_token
-from rest_auth.models import TokenModel
-
-from rest_auth.app_settings import TokenSerializer, create_token
-from rest_auth.models import TokenModel
-
 from django_redis import get_redis_connection
+from rest_auth.app_settings import TokenSerializer, create_token
+from rest_auth.models import TokenModel
 
 from utils.factories import (
-    ArtistFactory, GenreFactory, SongFactory, UserFactory, AlbumFactory,
-    PlaylistFactory)
-    SongFactory, UserFactory, GenreFactory, AlbumFactory, ArtistFactory
-)
+    AlbumFactory, ArtistFactory, GenreFactory, PlaylistFactory, SongFactory,
+    UserFactory)
 
 
 @pytest.fixture
@@ -98,3 +92,8 @@ def album():
 def playlist(user, songs):
     return PlaylistFactory.create(owner=user, is_private=False,
                                   songs=songs)
+
+
+@pytest.fixture
+def artists_for_added():
+    return ArtistFactory.create_batch(size=2)

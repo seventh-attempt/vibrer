@@ -1,13 +1,14 @@
-from apps.likes.mixins import LikedMixin
-from apps.media.models.artist import Artist
-from apps.media.serializers.artist import (
-    ArtistCUSerializer, ArtistDetailSerializer, ArtistShortInfoSerializer)
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.mixins import (
     CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin)
 from rest_framework.permissions import (
     AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly)
 from rest_framework.viewsets import GenericViewSet
+
+from apps.likes.mixins import LikedMixin
+from apps.media.models.artist import Artist
+from apps.media.serializers.artist import (
+    ArtistCUSerializer, ArtistDetailSerializer, ArtistShortInfoSerializer)
 from utils.permission_tools import ActionBasedPermission
 
 
@@ -17,7 +18,6 @@ class ArtistView(LikedMixin,
                  UpdateModelMixin,
                  ListModelMixin,
                  GenericViewSet):
-    serializer_class = ArtistDetailSerializer
     queryset = Artist.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ('genres',)

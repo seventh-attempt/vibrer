@@ -1,6 +1,7 @@
-from apps.user.models.user import User
 from rest_framework import serializers
+
 from apps.likes.models.like import Liked
+from apps.user.models.user import User
 
 
 class FanSerializer(serializers.ModelSerializer):

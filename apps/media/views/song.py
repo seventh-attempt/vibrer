@@ -1,18 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
-
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.status import HTTP_400_BAD_REQUEST
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
-
 from django_redis import get_redis_connection
-
+from rest_framework.decorators import action
 from rest_framework.mixins import (
     CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin)
 from rest_framework.permissions import (
     AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly)
+from rest_framework.response import Response
+from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.viewsets import GenericViewSet
+
 from apps.likes.mixins import LikedMixin
 from apps.media.models.song import Song
 from apps.media.serializers.song import (

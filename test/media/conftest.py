@@ -5,11 +5,6 @@ from utils.factories import (
 
 
 @pytest.fixture
-def artists_for_added():
-    return ArtistFactory.create_batch(size=2)
-
-
-@pytest.fixture
 def artist_qty():
     return 1
 

@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models import (
-    BooleanField, CharField, ForeignKey, ManyToManyField, Model,
-    PositiveSmallIntegerField, CASCADE)
+    CASCADE, BooleanField, CharField, ForeignKey, ManyToManyField, Model,
+    PositiveSmallIntegerField)
 
 from apps.likes.models.like import Liked
 from apps.media.models.song import Song

@@ -1,6 +1,3 @@
-import json
-
-import faker
 import pytest
 
 

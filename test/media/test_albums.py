@@ -45,14 +45,14 @@ class TestAlbums:
         assert res.status_code == 404
 
     @pytest.mark.parametrize('is_staff', [True])
-    def test_create(self, client, genres, album, artists, songs_for_added,
-                    token, user):
+    def test_create(self, client, genres, album, artists_for_added, token,
+                    songs_for_added, user):
         """
         test album create endpoint
         """
         title = faker.Faker().pystr(min_chars=10, max_chars=30)
         genres = [genre.id for genre in genres]
-        artists = [artist.id for artist in artists]
+        artists = [artist.id for artist in artists_for_added]
         songs = [song.id for song in songs_for_added]
         release_year = faker.Faker().date()
         data = json.dumps({
@@ -74,8 +74,8 @@ class TestAlbums:
         assert album_dict.get("release_year") == release_year
 
     @pytest.mark.parametrize('is_staff', [True])
-    def test_update_m2m(self, client, genres, album, artists, songs_for_added,
-                        token, user):
+    def test_update_m2m(self, client, genres, album, artists_for_added, token,
+                        songs_for_added, user):
         """
         test album update m2m fields:
             *genres
@@ -84,7 +84,7 @@ class TestAlbums:
         """
         title = faker.Faker().pystr(min_chars=10, max_chars=30)
         genres = [genre.id for genre in genres]
-        artists = [artist.id for artist in artists]
+        artists = [artist.id for artist in artists_for_added]
         songs = [song.id for song in songs_for_added]
         data = json.dumps({
             "title": title,
