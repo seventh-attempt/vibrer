@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_filters',
     'vibrer',
     'rest_auth',
+    'apps.celery',
 ]
 
 MIDDLEWARE = [
@@ -156,10 +157,13 @@ REST_AUTH_SERIALIZERS = {
 REDIS_HOST = os.environ.get('REDIS_HOST')
 REDIS_PORT = os.environ.get('REDIS_PORT')
 
+REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/1"
+
+
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
+        "LOCATION": REDIS_URL,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
