@@ -26,7 +26,6 @@ services:
     depends_on:
       - db
       - redis
-      - web
     networks:
       - app_net
   celery-beat:
@@ -38,13 +37,12 @@ services:
     depends_on:
       - db
       - redis
-      - web
     networks:
       - app_net
   web:
     build: .
     env_file: .env
-    command: bash -c "python manage.py fake_data && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/code
     ports:

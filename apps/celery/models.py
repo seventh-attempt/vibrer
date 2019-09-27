@@ -1,4 +1,3 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db.models import (
     CASCADE, DateTimeField, FloatField, Model, OneToOneField)
 
@@ -7,8 +6,7 @@ from apps.user.models import User
 
 
 class Event(Model):
-    song = OneToOneField(Song, on_delete=CASCADE)
     user = OneToOneField(User, on_delete=CASCADE)
+    song = OneToOneField(Song, on_delete=CASCADE)
     datetime = DateTimeField(auto_now_add=True)
-    listen_percentage = FloatField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)])
+    listen_percentage = FloatField()
