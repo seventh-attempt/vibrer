@@ -32,7 +32,7 @@ services:
   celery-beat:
     env_file: .env
     build: .
-    command: celery -A apps.celery beat -l info
+    command: celery -A apps.celery beat -l info --pidfile=./celeryd.pid
     volumes:
       - .:/code
     depends_on:

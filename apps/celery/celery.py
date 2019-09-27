@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from celery import Celery
 from celery.schedules import crontab
 from django.conf import settings
@@ -12,6 +14,6 @@ app.autodiscover_tasks(packages=settings.INSTALLED_APPS)
 app.conf.beat_schedule = {
     'aggregate_listen_info': {
         'task': 'aggregate_listen_info',
-        'schedule': crontab(minute='*/5')  # timedelta(seconds=30)
+        'schedule': timedelta(seconds=30)  # crontab(minute='*/5')
     }
 }

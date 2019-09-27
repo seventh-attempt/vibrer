@@ -31,7 +31,7 @@ def aggregate_listen_info():
                 'song': song,
                 'listen_percentage': round(pct, 2),
             }
-            Event.objects.update_or_create(**kwargs)
+            Event.objects.create(**kwargs)
         except ObjectDoesNotExist:
             print(f'Celery worker skipped object: {key}{values}')
     redis.flushall()
