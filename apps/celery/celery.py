@@ -1,13 +1,10 @@
-from __future__ import absolute_import
-
-from datetime import timedelta
-
 from celery import Celery
+from celery.schedules import crontab
 from django.conf import settings
 
 from vibrer.settings import REDIS_URL
 
-app = Celery('vibrer', broker=REDIS_URL)
+app = Celery('vibrer', broker=f'{REDIS_URL[:-1]}0')
 app.config_from_object('django.conf:settings')
 
 app.autodiscover_tasks(packages=settings.INSTALLED_APPS)
@@ -15,6 +12,6 @@ app.autodiscover_tasks(packages=settings.INSTALLED_APPS)
 app.conf.beat_schedule = {
     'aggregate_listen_info': {
         'task': 'aggregate_listen_info',
-        'schedule': timedelta(seconds=30)  # crontab(minute='*/15')
+        'schedule': crontab(minute='*/5')  # timedelta(seconds=30)
     }
 }
