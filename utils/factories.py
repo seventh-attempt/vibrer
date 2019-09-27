@@ -176,7 +176,6 @@ class LikedObjectFactory(factory.django.DjangoModelFactory):
 
 class LikedArtistFactory(LikedObjectFactory):
     content_object = factory.SubFactory(ArtistFactory)
-    like_type = Like.ARTIST
 
     class Meta:
         model = Like
@@ -184,7 +183,6 @@ class LikedArtistFactory(LikedObjectFactory):
 
 class LikedAlbumFactory(LikedObjectFactory):
     content_object = factory.SubFactory(AlbumFactory)
-    like_type = Like.ALBUM
 
     class Meta:
         model = Like
@@ -192,7 +190,6 @@ class LikedAlbumFactory(LikedObjectFactory):
 
 class LikedSongFactory(LikedObjectFactory):
     content_object = factory.SubFactory(SongFactory)
-    like_type = Like.SONG
 
     class Meta:
         model = Like
@@ -200,7 +197,6 @@ class LikedSongFactory(LikedObjectFactory):
 
 class LikedPlaylistFactory(LikedObjectFactory):
     content_object = factory.SubFactory(PlaylistFactory)
-    like_type = Like.PLAYLIST
 
     class Meta:
         model = Like
