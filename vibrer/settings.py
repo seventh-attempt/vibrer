@@ -29,21 +29,24 @@ ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third-party apps
+    'django_filters',
+    'rest_auth',
     'rest_framework',
     'rest_framework.authtoken',
+    # project apps
     'apps.media',
     'apps.user',
     'apps.likes',
-    'django_filters',
-    'vibrer',
-    'rest_auth',
     'apps.celery',
+    'vibrer',
 ]
 
 MIDDLEWARE = [

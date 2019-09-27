@@ -35,4 +35,3 @@ def aggregate_listen_info():
             Event.objects.create(**data)
 
     redis.flushall()
-
