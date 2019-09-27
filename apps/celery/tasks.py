@@ -1,7 +1,7 @@
 import datetime
 from itertools import groupby
 
-from django.core.cache import caches
+from django.core.cache import cache, caches
 from django.core.exceptions import ObjectDoesNotExist
 
 from apps.celery.celery import app
@@ -10,20 +10,16 @@ from apps.media.models import Song
 from apps.user.models import User
 from django_redis import get_redis_connection
 
-# cacheImitation = {
-#     "23-4-piece": [b"160-161", b"239-240", b"0-20", b"20-36"],
-#     "23-3-piece": [b"12-25", b"74-99"],
-#     "21-3-piece": [b"90-120", b"120-159"],
-#     "25-4-piece": [b"215-220", b"0-4", b"5-24"],
-#     "21-4-piece": [b"15-30", b"160-190", b"0-14", b"40-53", b"56-90"],
-# }
 
-
-@app.task
+# TODO fix
+@app.task(name='aggregate_listen_info')
 def aggregate_listen_info():
     con = get_redis_connection('default')
     print(con)
-    print(caches, caches['default'].keys('*'))
+    keys = con.keys('*')
+    print(keys)
+    print([v.decode() for v in filter(bool, con.mget(*keys))])
+    # print(con.(keys=keys))
     # grouped_values = [dict(v) for k, v in
     #                   groupby(cache.get_many(cache.keys("*")).items(), lambda x: x[0])]
     # for key, values in grouped_values:
