@@ -19,7 +19,7 @@ class LikedMixin:
         elif self.request.method == 'DELETE':
             obj = self.get_object()
             if not mixin_tools.is_fan(obj, request.user):
-                return Response(status=status.HTTP_409_CONFLICT)
+                return Response(status=status.HTTP_404_NOT_FOUND)
             mixin_tools.remove_like(obj, request.user)
             return Response()
 

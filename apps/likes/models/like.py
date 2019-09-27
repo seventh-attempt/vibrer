@@ -6,7 +6,7 @@ from django.db.models import (
 from apps.user.models.user import User
 
 
-class Liked(Model):
+class Like(Model):
     ARTIST = 'AR'
     SONG = 'SG'
     PLAYLIST = 'PT'

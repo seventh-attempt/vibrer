@@ -1,19 +1,19 @@
 from django.contrib.contenttypes.models import ContentType
 
-from apps.likes.models import Liked
+from apps.likes.models import Like
 from apps.user.models.user import User
 
 
 def add_like(obj, user):
     obj_type = ContentType.objects.get_for_model(obj)
-    like, is_created = Liked.objects.get_or_create(
+    like, is_created = Like.objects.get_or_create(
         content_type=obj_type, object_id=obj.id, user=user)
     return like
 
 
 def remove_like(obj, user):
     obj_type = ContentType.objects.get_for_model(obj)
-    Liked.objects.filter(
+    Like.objects.filter(
         content_type=obj_type, object_id=obj.id, user=user
     ).delete()
 
@@ -22,7 +22,7 @@ def is_fan(obj, user) -> bool:
     if not user.is_authenticated:
         return False
     obj_type = ContentType.objects.get_for_model(obj)
-    likes = Liked.objects.filter(
+    likes = Like.objects.filter(
         content_type=obj_type, object_id=obj.id, user=user)
     return likes.exists()
 

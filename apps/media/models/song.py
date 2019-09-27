@@ -3,7 +3,7 @@ from django.db.models import (
     BooleanField, CharField, ManyToManyField, Model, PositiveIntegerField,
     URLField)
 
-from apps.likes.models.like import Liked
+from apps.likes.models.like import Like
 
 
 class Song(Model):
@@ -15,7 +15,7 @@ class Song(Model):
     explicit = BooleanField(default=False)
     artists = ManyToManyField('Artist', related_name='songs')
     genres = ManyToManyField('Genre', related_name='songs')
-    likes = GenericRelation(Liked, related_query_name='songs')
+    likes = GenericRelation(Like, related_query_name='songs')
 
     def __str__(self):
         return self.title

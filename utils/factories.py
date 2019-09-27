@@ -4,7 +4,7 @@ from typing import Union
 import factory
 from django.contrib.contenttypes.models import ContentType
 
-from apps.likes.models.like import Liked
+from apps.likes.models.like import Like
 from apps.media.models.album import Album
 from apps.media.models.artist import Artist
 from apps.media.models.genre import Genre
@@ -176,34 +176,34 @@ class LikedObjectFactory(factory.django.DjangoModelFactory):
 
 class LikedArtistFactory(LikedObjectFactory):
     content_object = factory.SubFactory(ArtistFactory)
-    like_type = Liked.ARTIST
+    like_type = Like.ARTIST
 
     class Meta:
-        model = Liked
+        model = Like
 
 
 class LikedAlbumFactory(LikedObjectFactory):
     content_object = factory.SubFactory(AlbumFactory)
-    like_type = Liked.ALBUM
+    like_type = Like.ALBUM
 
     class Meta:
-        model = Liked
+        model = Like
 
 
 class LikedSongFactory(LikedObjectFactory):
     content_object = factory.SubFactory(SongFactory)
-    like_type = Liked.SONG
+    like_type = Like.SONG
 
     class Meta:
-        model = Liked
+        model = Like
 
 
 class LikedPlaylistFactory(LikedObjectFactory):
     content_object = factory.SubFactory(PlaylistFactory)
-    like_type = Liked.PLAYLIST
+    like_type = Like.PLAYLIST
 
     class Meta:
-        model = Liked
+        model = Like
 
 
 def fill_with_data(model: Union[Album, Artist, Genre, Song, User, Playlist],
@@ -239,7 +239,7 @@ def fill(amount=50):
     Song.objects.all().delete()
     User.objects.all().delete()
     Playlist.objects.all().delete()
-    Liked.objects.all().delete()
+    Like.objects.all().delete()
 
     # creating genres here
     for _ in range(len(GENRES)):
