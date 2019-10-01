@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # third-party apps
     'django_filters',
+    'drf_yasg',
     'rest_auth',
     'rest_framework',
     'rest_framework.authtoken',

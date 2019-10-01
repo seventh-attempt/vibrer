@@ -40,7 +40,12 @@ class PlaylistView(NestedViewSetMixin,
             return PlaylistCUSerializer
 
     def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            return Playlist.objects.none()
+
         user_id = self.kwargs['parent_lookup_user_playlists']
+
         if self.request.user.id == user_id or self.request.user.is_staff:
             return Playlist.objects.filter(owner_id=user_id)
         return Playlist.objects.filter(owner=user_id,
@@ -53,6 +58,10 @@ class SongsInPlaylistView(NestedViewSetMixin, viewsets.ModelViewSet):
     permission_classes = (IsOwnerOrAdminSong,)
 
     def get_queryset(self):
+
+        if getattr(self, 'swagger_fake_view', False):
+            return Playlist.objects.none()
+
         playlist_id = self.kwargs['parent_lookup_playlist']
         return Playlist.objects.filter(pk=playlist_id)
 
