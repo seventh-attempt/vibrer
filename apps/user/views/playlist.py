@@ -7,6 +7,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from apps.likes.mixins import LikedMixin
+from apps.likes.serializers.like import FanSerializer
 from apps.user.models.playlist import Playlist
 from apps.user.permissions import IsOwnerOrAdmin, IsOwnerOrAdminSong
 from apps.user.serializers.playlist import (
@@ -36,8 +37,12 @@ class PlaylistView(NestedViewSetMixin,
                 return PlaylistShortInfoSerializer
             elif self.action == 'retrieve':
                 return PlaylistSerializer
+            elif self.action == 'fans':
+                return FanSerializer
         elif self.request.method in ('POST', 'PUT'):
             return PlaylistCUSerializer
+
+        return super().get_serializer_class()
 
     def get_queryset(self):
 

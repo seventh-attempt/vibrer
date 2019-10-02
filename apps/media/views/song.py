@@ -10,6 +10,7 @@ from rest_framework.status import HTTP_400_BAD_REQUEST
 from rest_framework.viewsets import GenericViewSet
 
 from apps.likes.mixins import LikedMixin
+from apps.likes.serializers.like import FanSerializer
 from apps.media.models.song import Song
 from apps.media.serializers.song import (
     SongCUSerializer, SongDetailSerializer, SongShortInfoSerializer)
@@ -39,8 +40,12 @@ class SongView(LikedMixin,
                 return SongShortInfoSerializer
             elif self.action == 'retrieve':
                 return SongDetailSerializer
+            elif self.action == 'fans':
+                return FanSerializer
         elif self.request.method in ('POST', 'PUT'):
             return SongCUSerializer
+
+        return super().get_serializer_class()
 
     @action(methods=['POST'], detail=True)
     def listen(self, request, *args, **kwargs):

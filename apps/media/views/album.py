@@ -7,6 +7,7 @@ from rest_framework.permissions import (
 from rest_framework.viewsets import GenericViewSet
 
 from apps.likes.mixins import LikedMixin
+from apps.likes.serializers.like import FanSerializer
 from apps.media.models.album import Album
 from apps.media.serializers.album import (
     AlbumCUSerializer, AlbumDetailSerializer, AlbumShortInfoSerializer)
@@ -37,5 +38,9 @@ class AlbumView(LikedMixin,
                 return AlbumShortInfoSerializer
             elif self.action == 'retrieve':
                 return AlbumDetailSerializer
+            elif self.action == 'fans':
+                return FanSerializer
         elif self.request.method in ('POST', 'PUT'):
             return AlbumCUSerializer
+
+        return super().get_serializer_class()
