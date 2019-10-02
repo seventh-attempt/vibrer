@@ -2,10 +2,13 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth import logout as django_logout
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.decorators import method_decorator
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from drf_yasg.openapi import Response as SwaggerResponse
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -17,6 +20,18 @@ from apps.user.serializers.user import (
 User = get_user_model()
 
 
+# @method_decorator(name='', decorator=swagger_auto_schema(
+#     operation_description='# ',
+#     responses={
+#         '200': SwaggerResponse(
+#             '',
+#             UserSerializer()
+#         ),
+#         '400': 'Bad request',
+#         '401': 'Unauthorized',
+#         '403': 'Permission denied'
+#     }
+# ))
 class UserView(ModelViewSet):
     queryset = User.objects.all()
     http_method_names = ('get',)
@@ -28,6 +43,17 @@ class UserView(ModelViewSet):
         return UserSerializer
 
 
+# @method_decorator(name='', decorator=swagger_auto_schema(
+#     operation_description='# ',
+#     responses={
+#         '200': SwaggerResponse(
+#             '',
+#             UserSerializer()
+#         ),
+#         '401': 'Unauthorized',
+#         '404': "Modelname with specified id doesn't exist"
+#     }
+# ))
 class UserRegistrationView(APIView):
     serializer_class = UserRegistrationSerializer
 
@@ -44,6 +70,15 @@ class UserRegistrationView(APIView):
         return Response(serializer.data, status=HTTP_201_CREATED)
 
 
+# @method_decorator(name='', decorator=swagger_auto_schema(
+#     operation_description='# ',
+#     responses={
+#         '200': SwaggerResponse(
+#             '',
+#             UserLoginSerializer()
+#         )
+#     }
+# ))
 class UserLoginView(GenericAPIView):
     serializer_class = UserLoginSerializer
 
@@ -76,6 +111,19 @@ class UserLogoutView(APIView):
         return response
 
 
+# @method_decorator(name='', decorator=swagger_auto_schema(
+#     operation_description='# ',
+#     responses={
+#         '200': SwaggerResponse(
+#             '',
+#             UserSerializer()
+#         ),
+#         '400': 'Bad request',
+#         '401': 'Unauthorized',
+#         '403': 'Permission denied',
+#         '404': "Modelname with specified id doesn't exist"
+#     }
+# ))
 class UserGetDetailsView(RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer

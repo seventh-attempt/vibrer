@@ -1,4 +1,7 @@
+from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_yasg.openapi import Response as SwaggerResponse
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.filters import OrderingFilter
 from rest_framework.mixins import (
     CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin)
@@ -14,6 +17,51 @@ from apps.media.serializers.album import (
 from utils.permission_tools import ActionBasedPermission
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+    operation_description='# Get list of all albums',
+    responses={
+        '200': SwaggerResponse(
+            'The list of albums has been retrieved successfully',
+            AlbumShortInfoSerializer()
+        )
+    }
+))
+@method_decorator(name='retrieve', decorator=swagger_auto_schema(
+    operation_description='# Get album with the specified id',
+    responses={
+        '200': SwaggerResponse(
+            'Album has been retrieved successfully',
+            AlbumDetailSerializer()
+        ),
+        '404': "Album with specified id doesn't exist"
+    }
+))
+@method_decorator(name='create', decorator=swagger_auto_schema(
+    operation_description='# Create new Album',
+    responses={
+        '200': SwaggerResponse(
+            'Album has been created successfully',
+            AlbumCUSerializer()
+        ),
+        '400': 'Bad request',
+        '401': 'Unauthorized',
+        '403': 'Permission denied'
+    }
+))
+@method_decorator(name='update', decorator=swagger_auto_schema(
+    operation_description='# Full or partial update of the Album'
+                          ' with the specified id',
+    responses={
+        '200': SwaggerResponse(
+            'Album with specified id has been updated successfully',
+            AlbumCUSerializer()
+        ),
+        '400': 'Bad request',
+        '401': 'Unauthorized',
+        '403': 'Permission denied',
+        '404': "Album with specified id doesn't exist"
+    }
+))
 class AlbumView(LikedMixin,
                 CreateModelMixin,
                 RetrieveModelMixin,

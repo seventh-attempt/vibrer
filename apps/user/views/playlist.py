@@ -1,3 +1,6 @@
+from django.utils.decorators import method_decorator
+from drf_yasg.openapi import Response as SwaggerResponse
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status, viewsets
 from rest_framework.mixins import (
     CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin)
@@ -16,6 +19,52 @@ from apps.user.serializers.playlist import (
 from utils.permission_tools import ActionBasedPermission
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+    operation_description='# Get list of all playlists',
+    responses={
+        '200': SwaggerResponse(
+            'The list of playlists has been retrieved successfully',
+            PlaylistShortInfoSerializer()
+        )
+    }
+))
+@method_decorator(name='retrieve', decorator=swagger_auto_schema(
+    operation_description='# Get playlists with the specified id',
+    responses={
+        '200': SwaggerResponse(
+            'Playlist has been retrieved successfully',
+            PlaylistSerializer()
+        ),
+        '401': 'Unauthorized',
+        '404': "Playlist with specified id doesn't exist"
+    }
+))
+@method_decorator(name='create', decorator=swagger_auto_schema(
+    operation_description='# Create new Playlist',
+    responses={
+        '200': SwaggerResponse(
+            'Playlist has been created successfully',
+            PlaylistCUSerializer()
+        ),
+        '400': 'Bad request',
+        '401': 'Unauthorized',
+        '403': 'Permission denied'
+    }
+))
+@method_decorator(name='update', decorator=swagger_auto_schema(
+    operation_description='# Full update of the Playlist'
+                          ' with the specified id',
+    responses={
+        '200': SwaggerResponse(
+            'Playlist with specified id has been updated successfully',
+            PlaylistCUSerializer()
+        ),
+        '400': 'Bad request',
+        '401': 'Unauthorized',
+        '403': 'Permission denied',
+        '404': "Playlist with specified id doesn't exist"
+    }
+))
 class PlaylistView(NestedViewSetMixin,
                    LikedMixin,
                    CreateModelMixin,
@@ -56,7 +105,32 @@ class PlaylistView(NestedViewSetMixin,
         return Playlist.objects.filter(owner=user_id,
                                        is_private=False)
 
-
+@method_decorator(name='create', decorator=swagger_auto_schema(
+    operation_description='# Create new Playlist',
+    responses={
+        '200': SwaggerResponse(
+            'Playlist has been created successfully',
+            PlaylistCUSerializer()
+        ),
+        '400': 'Bad request',
+        '401': 'Unauthorized',
+        '403': 'Permission denied'
+    }
+))
+@method_decorator(name='destroy', decorator=swagger_auto_schema(
+    operation_description='# Delete Song by id from the Playlist'
+                          ' with the specified id',
+    responses={
+        '200': SwaggerResponse(
+            'Song with specified id has been updated successfully',
+            PlaylistCUSerializer()
+        ),
+        '400': 'Bad request',
+        '401': 'Unauthorized',
+        '403': 'Permission denied',
+        '404': "Playlist with specified id doesn't exist"
+    }
+))
 class SongsInPlaylistView(NestedViewSetMixin, viewsets.ModelViewSet):
     http_method_names = ('post', 'delete',)
     serializer_class = SongsInPlaylistSerializer

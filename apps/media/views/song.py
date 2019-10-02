@@ -1,5 +1,8 @@
+from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from django_redis import get_redis_connection
+from drf_yasg.openapi import Response as SwaggerResponse
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import action
 from rest_framework.mixins import (
     CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin)
@@ -17,6 +20,51 @@ from apps.media.serializers.song import (
 from utils.permission_tools import ActionBasedPermission
 
 
+@method_decorator(name='list', decorator=swagger_auto_schema(
+    operation_description='# Get list of all songs',
+    responses={
+        '200': SwaggerResponse(
+            'The list of songs has been retrieved successfully',
+            SongShortInfoSerializer()
+        )
+    }
+))
+@method_decorator(name='retrieve', decorator=swagger_auto_schema(
+    operation_description='# Get songs with the specified id',
+    responses={
+        '200': SwaggerResponse(
+            'Song has been retrieved successfully',
+            SongDetailSerializer()
+        ),
+        '404': "Song with specified id doesn't exist"
+    }
+))
+@method_decorator(name='create', decorator=swagger_auto_schema(
+    operation_description='# Create new Song',
+    responses={
+        '200': SwaggerResponse(
+            'Song has been created successfully',
+            SongCUSerializer()
+        ),
+        '400': 'Bad request',
+        '401': 'Unauthorized',
+        '403': 'Permission denied'
+    }
+))
+@method_decorator(name='update', decorator=swagger_auto_schema(
+    operation_description='# Full update of the Song'
+                          ' with the specified id',
+    responses={
+        '200': SwaggerResponse(
+            'Song with specified id has been updated successfully',
+            SongCUSerializer()
+        ),
+        '400': 'Bad request',
+        '401': 'Unauthorized',
+        '403': 'Permission denied',
+        '404': "Song with specified id doesn't exist"
+    }
+))
 class SongView(LikedMixin,
                CreateModelMixin,
                RetrieveModelMixin,
