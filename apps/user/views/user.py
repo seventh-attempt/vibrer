@@ -52,18 +52,17 @@ class UserView(ModelViewSet):
         return UserSerializer
 
 
-# @method_decorator(name='create', decorator=swagger_auto_schema(
-#     operation_description='# Registers new user',
-#     responses={
-#         # 'SHOW_REQUEST_HEADERS': True,
-#         '200': SwaggerResponse(
-#             'User registered successfully',
-#             UserRegistrationSerializer()
-#         ),
-#         '400': 'Bad request'
-#     }
-# ))
-class UserRegistrationView(APIView):
+@method_decorator(name='post', decorator=swagger_auto_schema(
+    operation_description='# Registers new user',
+    responses={
+        '201': SwaggerResponse(
+            'User registered successfully',
+            UserRegistrationSerializer()
+        ),
+        '400': 'Bad request'
+    }
+))
+class UserRegistrationView(GenericAPIView):
     serializer_class = UserRegistrationSerializer
 
     def post(self, request):
@@ -79,16 +78,16 @@ class UserRegistrationView(APIView):
         return Response(serializer.data, status=HTTP_201_CREATED)
 
 
-# @method_decorator(name='validate', decorator=swagger_auto_schema(
-#     operation_description='# Endpoint for logging in',
-#     responses={
-#         '200': SwaggerResponse(
-#             'Successfully logged in',
-#             UserLoginSerializer()
-#         ),
-#         '401': 'Unauthorized',
-#     }
-# ))
+@method_decorator(name='post', decorator=swagger_auto_schema(
+    operation_description='# Endpoint for logging in',
+    responses={
+        '200': SwaggerResponse(
+            'Successfully logged in',
+            UserLoginSerializer()
+        ),
+        '401': 'Unauthorized',
+    }
+))
 class UserLoginView(GenericAPIView):
     serializer_class = UserLoginSerializer
 
@@ -106,17 +105,16 @@ class UserLoginView(GenericAPIView):
                         status=HTTP_200_OK)
 
 
-# @method_decorator(name='retrieve', decorator=swagger_auto_schema(
-#     operation_description='# Endpoint for logging out',
-#     responses={
-#         '200': SwaggerResponse(
-#             'Successfully logged out',
-#             UserLoginSerializer()
-#         ),
-#         '401': 'Unauthorized',
-#         '403': 'Permission denied'
-#     }
-# ))
+@method_decorator(name='post', decorator=swagger_auto_schema(
+    operation_description='# Endpoint for logging out',
+    responses={
+        '200': SwaggerResponse(
+            'Successfully logged out',
+            UserLoginSerializer()
+        ),
+        '401': 'Unauthorized',
+    }
+))
 class UserLogoutView(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -129,22 +127,10 @@ class UserLogoutView(APIView):
         if getattr(settings, 'REST_SESSION_LOGIN', True):
             django_logout(request)
 
-        response = Response({'details': 'Logged out successfully'},
-                            status=HTTP_200_OK)
-
-        return response
+        return Response({'details': 'Logged out successfully'},
+                        status=HTTP_200_OK)
 
 
-# @method_decorator(name='', decorator=swagger_auto_schema(
-#     operation_description='# Shows information about authorized user',
-#     responses={
-#         '200': SwaggerResponse(
-#             'Information about authorized user got successfully',
-#             UserSerializer()
-#         ),
-#         '401': 'Unauthorized',
-#     }
-# ))
 class UserGetDetailsView(RetrieveAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer

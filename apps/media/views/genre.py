@@ -26,32 +26,6 @@ from apps.media.serializers.genre import GenreDetailSerializer
         '404': "Genre with specified id doesn't exist"
     }
 ))
-@method_decorator(name='create', decorator=swagger_auto_schema(
-    operation_description='# Create new Genre',
-    responses={
-        '200': SwaggerResponse(
-            'Genre has been created successfully',
-            GenreDetailSerializer()
-        ),
-        '400': 'Bad request',
-        '401': 'Unauthorized',
-        '403': 'Permission denied'
-    }
-))
-@method_decorator(name='update', decorator=swagger_auto_schema(
-    operation_description='# Full update of the Genre'
-                          ' with the specified id',
-    responses={
-        '200': SwaggerResponse(
-            'Genre with specified id has been updated successfully',
-            GenreDetailSerializer()
-        ),
-        '400': 'Bad request',
-        '401': 'Unauthorized',
-        '403': 'Permission denied',
-        '404': "Genre with specified id doesn't exist"
-    }
-))
 class GenreView(viewsets.ModelViewSet):
     serializer_class = GenreDetailSerializer
     queryset = Genre.objects.all()

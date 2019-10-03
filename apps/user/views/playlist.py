@@ -72,7 +72,7 @@ class PlaylistView(NestedViewSetMixin,
                    UpdateModelMixin,
                    ListModelMixin,
                    GenericViewSet):
-    http_method_names = ('get', 'post', 'put')
+    http_method_names = ('get', 'post', 'put', 'delete')
     permission_classes = (ActionBasedPermission,)
     action_permissions = {
         AllowAny: ('retrieve', 'list'),
