@@ -9,7 +9,9 @@ from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from drf_yasg.openapi import Response as SwaggerResponse
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
+from rest_framework.status import (
+    HTTP_200_OK, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
+)
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
@@ -20,18 +22,25 @@ from apps.user.serializers.user import (
 User = get_user_model()
 
 
-# @method_decorator(name='', decorator=swagger_auto_schema(
-#     operation_description='# ',
-#     responses={
-#         '200': SwaggerResponse(
-#             '',
-#             UserSerializer()
-#         ),
-#         '400': 'Bad request',
-#         '401': 'Unauthorized',
-#         '403': 'Permission denied'
-#     }
-# ))
+@method_decorator(name='list', decorator=swagger_auto_schema(
+    operation_description='# Shows a list of all users',
+    responses={
+        '200': SwaggerResponse(
+            'The list of users has been retrieved successfully',
+            UserShortInfoSerializer()
+        )
+    }
+))
+@method_decorator(name='retrieve', decorator=swagger_auto_schema(
+    operation_description='# Shows the information about specific user',
+    responses={
+        '200': SwaggerResponse(
+            '',
+            UserSerializer()
+        ),
+        '404': "User with this specific id doesn't exist"
+    }
+))
 class UserView(ModelViewSet):
     queryset = User.objects.all()
     http_method_names = ('get',)
@@ -43,15 +52,15 @@ class UserView(ModelViewSet):
         return UserSerializer
 
 
-# @method_decorator(name='', decorator=swagger_auto_schema(
-#     operation_description='# ',
+# @method_decorator(name='create', decorator=swagger_auto_schema(
+#     operation_description='# Registers new user',
 #     responses={
+#         # 'SHOW_REQUEST_HEADERS': True,
 #         '200': SwaggerResponse(
-#             '',
-#             UserSerializer()
+#             'User registered successfully',
+#             UserRegistrationSerializer()
 #         ),
-#         '401': 'Unauthorized',
-#         '404': "Modelname with specified id doesn't exist"
+#         '400': 'Bad request'
 #     }
 # ))
 class UserRegistrationView(APIView):
@@ -70,13 +79,14 @@ class UserRegistrationView(APIView):
         return Response(serializer.data, status=HTTP_201_CREATED)
 
 
-# @method_decorator(name='', decorator=swagger_auto_schema(
-#     operation_description='# ',
+# @method_decorator(name='validate', decorator=swagger_auto_schema(
+#     operation_description='# Endpoint for logging in',
 #     responses={
 #         '200': SwaggerResponse(
-#             '',
+#             'Successfully logged in',
 #             UserLoginSerializer()
-#         )
+#         ),
+#         '401': 'Unauthorized',
 #     }
 # ))
 class UserLoginView(GenericAPIView):
@@ -84,7 +94,10 @@ class UserLoginView(GenericAPIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
+
+        if not serializer.is_valid():
+            return Response({'details': 'Provided wrong credentials'},
+                            status=HTTP_401_UNAUTHORIZED)
 
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
@@ -93,6 +106,17 @@ class UserLoginView(GenericAPIView):
                         status=HTTP_200_OK)
 
 
+# @method_decorator(name='retrieve', decorator=swagger_auto_schema(
+#     operation_description='# Endpoint for logging out',
+#     responses={
+#         '200': SwaggerResponse(
+#             'Successfully logged out',
+#             UserLoginSerializer()
+#         ),
+#         '401': 'Unauthorized',
+#         '403': 'Permission denied'
+#     }
+# ))
 class UserLogoutView(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -112,16 +136,13 @@ class UserLogoutView(APIView):
 
 
 # @method_decorator(name='', decorator=swagger_auto_schema(
-#     operation_description='# ',
+#     operation_description='# Shows information about authorized user',
 #     responses={
 #         '200': SwaggerResponse(
-#             '',
+#             'Information about authorized user got successfully',
 #             UserSerializer()
 #         ),
-#         '400': 'Bad request',
 #         '401': 'Unauthorized',
-#         '403': 'Permission denied',
-#         '404': "Modelname with specified id doesn't exist"
 #     }
 # ))
 class UserGetDetailsView(RetrieveAPIView):

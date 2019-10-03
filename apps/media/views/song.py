@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from django_redis import get_redis_connection
@@ -99,7 +100,7 @@ class SongView(LikedMixin,
     def listen(self, request, *args, **kwargs):
         start_second = request.data.get('start_second')
         end_second = request.data.get('end_second')
-        song = Song.objects.get(pk=kwargs['pk'])
+        song = get_object_or_404(Song, pk=kwargs['pk'])
         err_details = None
 
         if type(start_second) is not int or type(end_second) is not int:

@@ -174,6 +174,13 @@ CACHES = {
     }
 }
 
+LOGIN_URL = '/auth/login/'
+LOGOUT_URL = '/auth/login/'
+
+SWAGGER_SETTINGS = {
+    'VALIDATOR_URL': None,
+}
+
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -102,8 +102,7 @@ class PlaylistView(NestedViewSetMixin,
 
         if self.request.user.id == user_id or self.request.user.is_staff:
             return Playlist.objects.filter(owner_id=user_id)
-        return Playlist.objects.filter(owner=user_id,
-                                       is_private=False)
+        return Playlist.objects.filter(owner=user_id, is_private=False)
 
 @method_decorator(name='create', decorator=swagger_auto_schema(
     operation_description='# Create new Playlist',
