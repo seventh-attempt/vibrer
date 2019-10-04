@@ -52,12 +52,9 @@ class LikedMixin:
             return Response()
 
     @method_decorator(name='fans', decorator=swagger_auto_schema(
-        operation_description='# Full or partial update of the '
-                              'Album/Artist/Song/Playlist property '
-                              'with the specified id',
+        operation_description='# Returns the list of users following current object',
         responses={
-            '200': 'Get all fans of specified with id '
-                   'Album/Artist/Song/Playlist'
+            '200': 'List of fans received'
         }
     ))
     @action(methods=['GET'], detail=True, )
