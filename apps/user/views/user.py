@@ -4,10 +4,10 @@ from django.contrib.auth import logout as django_logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.decorators import method_decorator
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 from drf_yasg.openapi import Response as SwaggerResponse
 from rest_framework.status import (
     HTTP_200_OK, HTTP_201_CREATED, HTTP_401_UNAUTHORIZED
@@ -88,10 +88,10 @@ class UserRegistrationView(GenericAPIView):
         '401': 'Unauthorized',
     }
 ))
-class UserLoginView(GenericAPIView):
+class UserLoginView(TokenObtainPairView):
     serializer_class = UserLoginSerializer
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
 
         if not serializer.is_valid():
@@ -99,10 +99,9 @@ class UserLoginView(GenericAPIView):
                             status=HTTP_401_UNAUTHORIZED)
 
         user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
 
-        return Response({'id': user.id, 'token': token.key},
-                        status=HTTP_200_OK)
+        return Response({'id': user.id, 'access': serializer.validated_data['access'],
+                         'refresh': serializer.validated_data['refresh']}, status=HTTP_200_OK)
 
 
 @method_decorator(name='post', decorator=swagger_auto_schema(
@@ -120,7 +119,8 @@ class UserLogoutView(APIView):
 
     def post(self, request, *args, **kwargs):
         try:
-            request.user.auth_token.delete()
+            user = request.user.auth_token.delete()
+        # TODO:    do something with RefreshToken and blacklist method in tokens
         except (AttributeError, ObjectDoesNotExist):
             pass
 

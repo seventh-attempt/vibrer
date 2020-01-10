@@ -13,6 +13,7 @@ class TestSongs:
         """
         res = client.get(f'/api/song/{song.id}/')
         song_dict = res.json()
+
         assert res.status_code == 200
         assert isinstance(song_dict.get('title'), str)
         assert isinstance(song_dict.get('duration'), int)
@@ -31,6 +32,7 @@ class TestSongs:
             * data type
         """
         res = client.get('/api/song/')
+
         assert res.status_code == 200
         assert isinstance(res.json(), list)
         assert len(res.json()) == song_qty
@@ -41,6 +43,7 @@ class TestSongs:
         """
         res = client.get(
             f'/api/song/{faker.Faker().random_number(digits=30)}/')
+
         assert res.status_code == 404
 
     @pytest.mark.parametrize('is_staff', [True])
@@ -66,9 +69,10 @@ class TestSongs:
         data = json.dumps(data)
         res = client.post(f'/api/song/{song.id}/listen/', data=data,
                           content_type='application/json',
-                          **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                          **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
 
         song_dict = res.json()
+
         assert res.status_code == 200
         assert song_dict.get('title') == title
         assert song_dict.get('duration') == duration
@@ -100,8 +104,9 @@ class TestSongs:
         })
         res = client.post('/api/song/', data=data,
                           content_type="application/json",
-                          **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                          **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         song_dict = res.json()
+
         assert res.status_code == 201
         assert song_dict.get('title') == title
         assert song_dict.get('image') == image
@@ -123,8 +128,9 @@ class TestSongs:
         })
         res = client.put(f'/api/song/{song.id}/', data=data,
                          content_type="application/json",
-                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                         **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         song_dict = res.json()
+
         assert res.status_code == 200
         assert song_dict.get("title") == title
         assert set(song_dict.get("genres")) == set(genres)
@@ -154,8 +160,9 @@ class TestSongs:
         })
         res = client.put(f'/api/song/{song.id}/', data=data,
                          content_type="application/json",
-                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                         **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         song_dict = res.json()
+
         assert res.status_code == 200
         assert song_dict.get("title") == title
         assert song_dict.get("image") == image

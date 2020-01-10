@@ -12,14 +12,17 @@ class TestLikes:
         res = client.post(
             f'/api/{content_type}/{content_obj.id}/like/',
             content_type="application/json",
-            **{'HTTP_AUTHORIZATION': 'Token ' + str(token)}
+            **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)}
         )
+
         assert res.status_code == 200
+
         res = client.post(
             f'/api/{content_type}/{content_obj.id}/like/',
             content_type="application/json",
-            **{'HTTP_AUTHORIZATION': 'Token ' + str(token)}
+            **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)}
         )
+
         assert res.status_code == 409
 
     def test_remove_like(self, client, liked_song, user, song, token):
@@ -31,19 +34,24 @@ class TestLikes:
             content_type="application/json"
         )
         fans_dict = res.json()[0]
+
         assert user.id == fans_dict['id']
         assert user.username == fans_dict['username']
+
         res = client.delete(
             f'/api/song/{song.id}/like/',
             content_type="application/json",
-            **{'HTTP_AUTHORIZATION': 'Token ' + str(token)}
+            **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)}
         )
+
         assert res.status_code == 200
+
         res = client.get(
             f'/api/song/{song.id}/fans/',
             content_type="application/json"
         )
         fans_dict = res.json()
+
         assert len(fans_dict) == 0
 
     def test_like_auth_error(self, client, song):
@@ -54,8 +62,11 @@ class TestLikes:
             f'/api/song/{song.id}/like/',
             content_type="application/json",
         )
+
         assert res.status_code == 401
+
         response = res.json()['detail']
+
         assert response == 'Authentication credentials were not provided.'
 
     def test_unlike_error(self, client, song, user, token):
@@ -65,8 +76,9 @@ class TestLikes:
         res = client.delete(
             f'/api/song/{song.id}/like/',
             content_type="application/json",
-            **{'HTTP_AUTHORIZATION': 'Token ' + str(token)}
+            **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)}
         )
+
         assert res.status_code == 404
 
     @pytest.mark.parametrize('content_type', ['song', 'album', 'artist'])
@@ -78,15 +90,20 @@ class TestLikes:
         res = client.post(
             f'/api/{content_type}/{content_obj.id}/like/',
             content_type="application/json",
-            **{'HTTP_AUTHORIZATION': 'Token ' + str(token)}
+            **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)}
         )
+
         assert res.status_code == 200
+
         res = client.get(
             f'/api/{content_type}/{content_obj.id}/fans/',
             content_type="application/json",
-            **{'HTTP_AUTHORIZATION': 'Token ' + str(token)}
+            **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)}
         )
+
         assert res.status_code == 200
+
         fans_dict = res.json()[0]
+
         assert user.id == fans_dict['id']
         assert user.username == fans_dict['username']

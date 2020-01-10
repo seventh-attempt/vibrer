@@ -10,6 +10,7 @@ pytest-django = "==3.5.1"
 localstack = "==0.10.2.5"
 awscli = "==1.16.236"
 boto3 = "==1.9.226"
+djangorestframework-simplejwt = "===4.4.0"
 
 [packages]
 pillow = "==6.1.0"
@@ -24,6 +25,7 @@ django-redis = "==4.10.0"
 celery = "==4.3.0"
 drf-yasg = "==1.16.1"
 packaging = "==19.2"
+djangorestframework-simplejwt = "===4.4.0"
 
 [requires]
 python_version = "3.7"

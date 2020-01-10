@@ -13,6 +13,7 @@ class TestAlbums:
         """
         res = client.get(f'/api/album/{album.id}/')
         album_dict = res.json()
+
         assert res.status_code == 200
         assert isinstance(album_dict.get('title'), str)
         assert isinstance(album_dict.get('songs_amount'), int)
@@ -64,8 +65,9 @@ class TestAlbums:
         })
         res = client.post(f'/api/album/', data=data,
                           content_type="application/json",
-                          **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                          **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         album_dict = res.json()
+
         assert res.status_code == 201
         assert album_dict.get("title") == title
         assert set(album_dict.get("genres")) == set(genres)
@@ -94,8 +96,9 @@ class TestAlbums:
         })
         res = client.put(f'/api/album/{album.id}/', data=data,
                          content_type="application/json",
-                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                         **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         album_dict = res.json()
+
         assert res.status_code == 200
         assert album_dict.get("title") == title
         assert set(album_dict.get("genres")) == set(genres)
@@ -122,8 +125,9 @@ class TestAlbums:
         })
         res = client.put(f'/api/album/{album.id}/', data=data,
                          content_type="application/json",
-                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                         **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         album_dict = res.json()
+
         assert res.status_code == 200
         assert album_dict.get("title") == title
         assert set(album_dict.get("genres")) == set(genres)

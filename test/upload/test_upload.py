@@ -38,8 +38,9 @@ class TestUpload:
         data = json.dumps(data)
         res = client.post('/api/song/', data=data,
                           content_type='application/json',
-                          **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                          **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         song_dict = res.json()
+
         assert res.status_code == 201
         assert song_dict.get('title') == title
         assert song_dict.get('image') == song_image

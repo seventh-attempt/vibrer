@@ -13,6 +13,7 @@ class TestArtists:
         """
         res = client.get(f'/api/artist/{artist.id}/')
         artist_dict = res.json()
+
         assert res.status_code == 200
         assert isinstance(artist_dict.get('stage_name'), str)
         assert isinstance(artist_dict.get('info'), str)
@@ -27,6 +28,7 @@ class TestArtists:
             * data type
         """
         res = client.get('/api/artist/')
+
         assert res.status_code == 200
         assert isinstance(res.json(), list)
         assert len(res.json()) == artist_qty
@@ -38,6 +40,7 @@ class TestArtists:
         res = client.get(
             f'/api/artist/{faker.Faker().random_number(digits=30)}/'
         )
+
         assert res.status_code == 404
 
     @pytest.mark.parametrize('is_staff', [True])
@@ -53,8 +56,9 @@ class TestArtists:
         })
         res = client.post('/api/artist/', data=data,
                           content_type="application/json",
-                          **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                          **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         artist_dict = res.json()
+
         assert res.status_code == 201
         assert set(artist_dict.get("genres")) == set(genres)
         assert artist_dict.get("stage_name") == stage_name
@@ -72,8 +76,9 @@ class TestArtists:
         })
         res = client.put(f'/api/artist/{artist.id}/', data=data,
                          content_type="application/json",
-                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                         **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         artist_dict = res.json()
+
         assert res.status_code == 200
         assert artist_dict.get("info") == info
         assert set(artist_dict.get("genres")) == set(genres)
@@ -93,8 +98,9 @@ class TestArtists:
         })
         res = client.put(f'/api/artist/{artist.id}/', data=data,
                          content_type="application/json",
-                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                         **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         artist_dict = res.json()
+
         assert res.status_code == 200
         assert artist_dict.get("info") == info
         assert set(artist_dict.get("genres")) == set(genres)

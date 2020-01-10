@@ -18,6 +18,7 @@ class TestPlaylist:
         playlist_dict = res.json()
         songs_list = playlist_dict.get('songs')
         song = songs_list.pop()
+
         assert res.status_code == 200
         assert isinstance(playlist_dict.get('name'), str)
         assert isinstance(playlist_dict.get('songs'), list)
@@ -35,8 +36,9 @@ class TestPlaylist:
         """
         res = client.get(f'/api/user/{user.id}/playlist/{playlist.id}/',
                          content_type="application/json",
-                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                         **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         playlist_dict = res.json()
+
         assert res.status_code == 200
         assert isinstance(playlist_dict.get('name'), str)
         assert isinstance(playlist_dict.get('is_private'), bool)
@@ -52,7 +54,8 @@ class TestPlaylist:
         """
         res = client.get(f'/api/user/{user.id}/playlist/',
                          content_type="application/json",
-                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                         **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
+
         assert res.status_code == 200
         assert isinstance(res.json(), list)
         assert len(res.json()) == playlist_qty
@@ -70,8 +73,9 @@ class TestPlaylist:
         })
         res = client.post(f'/api/user/{user.id}/playlist/', data=data,
                           content_type="application/json",
-                          **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                          **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         playlist_dict = res.json()
+
         assert res.status_code == 201
         assert playlist_dict.get("name") == name
         assert playlist_dict.get("is_private") is is_private
@@ -88,8 +92,9 @@ class TestPlaylist:
         })
         res = client.put(f'/api/user/{user.id}/playlist/{playlist.id}/',
                          data=data, content_type="application/json",
-                         **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                         **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         playlist_dict = res.json()
+
         assert res.status_code == 200
         assert playlist_dict.get("name") == name
         assert playlist_dict.get("is_private") is True
@@ -107,8 +112,9 @@ class TestPlaylist:
         })
         res = client.post(f'/api/user/{user.id}/playlist/{playlist.id}/song/',
                           data=data, content_type="application/json",
-                          **{'HTTP_AUTHORIZATION': 'Token ' + str(token)})
+                          **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)})
         songs_dict = res.json()
+
         assert res.status_code == 201
         assert set(songs_dict.get("songs")) == set(songs_for_added)
 
@@ -121,12 +127,15 @@ class TestPlaylist:
         """
         song_id = playlist.songs.first().id
         songs = {x.id for x in playlist.songs.all()}
+
         assert song_id in songs
+
         res = client.delete(
                 f'/api/user/{user.id}/playlist/{playlist.id}/song/{song_id}/',
                 content_type="application/json",
-                **{'HTTP_AUTHORIZATION': 'Token ' + str(token)}
+                **{'HTTP_AUTHORIZATION': 'Bearer ' + str(token)}
         )
         songs = {x.id for x in playlist.songs.all()}
+
         assert res.status_code == 204
         assert song_id not in songs

@@ -1,7 +1,10 @@
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework.serializers import (
-    CharField, HyperlinkedRelatedField, ModelSerializer,
-    Serializer, ValidationError)
+    CharField, HyperlinkedRelatedField, ModelSerializer, ValidationError
+)
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
+from rest_framework_simplejwt.tokens import OutstandingToken
 
 from apps.likes.serializers.like import LikeSerializer
 
@@ -20,11 +23,10 @@ class UserRegistrationSerializer(ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 
-class UserLoginSerializer(Serializer):
+class UserLoginSerializer(TokenObtainPairSerializer):
     username = CharField(max_length=50)
     password = CharField(max_length=128, style={'input_type': 'password'},
                          write_only=True)
-    token = CharField(max_length=100, read_only=True)
 
     def validate(self, data):
         username = data.get('username', None)
@@ -41,7 +43,17 @@ class UserLoginSerializer(Serializer):
             raise ValidationError(
                 'Both username and password are required for authentication')
 
+        token_set = OutstandingToken.objects.filter(user_id=user.id)
+
+        if len(token_set) > 0:
+            BlacklistedToken.objects.get_or_create(token=token_set.latest('created_at'))
+
+        refresh = self.get_token(user)
+
         data['user'] = user
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+
         return data
 
 

@@ -2,6 +2,7 @@ import pytest
 from django_redis import get_redis_connection
 from rest_auth.app_settings import TokenSerializer, create_token
 from rest_auth.models import TokenModel
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from utils.factories import (
     AlbumFactory, ArtistFactory, GenreFactory, PlaylistFactory, SongFactory,
@@ -41,7 +42,7 @@ def user(is_staff):
 
 @pytest.fixture
 def token(user):
-    return create_token(TokenModel, user, TokenSerializer)
+    return TokenObtainPairSerializer.get_token(user).access_token
 
 
 @pytest.fixture
