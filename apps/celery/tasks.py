@@ -1,13 +1,15 @@
+from random import randint, random
+
 from django.core.exceptions import ObjectDoesNotExist
 from django_redis import get_redis_connection
 
-from apps.celery.celery import app
+from apps.celery.celery import app1, app2
 from apps.celery.models import Event
 from apps.media.models import Song
 from apps.user.models import User
 
 
-@app.task(name='aggregate_listen_info')
+@app1.task(name='aggregate_listen_info')
 def aggregate_listen_info():
     redis = get_redis_connection('default')
     keys = redis.keys('*')
@@ -35,3 +37,14 @@ def aggregate_listen_info():
             Event.objects.create(**data)
 
     redis.flushall()
+
+
+@app2.task
+def reverse_after_pause():
+    data = {
+        'user': User.objects.get(pk=randint(0, 51)),
+        'song': Song.objects.get(pk=randint(0, 51)),
+        'listen_percentage': random()
+    }
+
+    Event.objects.create(**data)

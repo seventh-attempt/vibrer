@@ -150,6 +150,10 @@ REDIS_PORT = os.environ.get('REDIS_PORT')
 
 REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/1"
 
+RABBIT_HOST = os.environ.get('RABBIT_HOST')
+RABBIT_PORT = os.environ.get('RABBIT_PORT')
+
+RABBIT_URL = f'amqp://{RABBIT_HOST}:{RABBIT_PORT}'
 
 CACHES = {
     "default": {
